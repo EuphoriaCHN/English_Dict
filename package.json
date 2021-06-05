@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently -n Client,Server -p \"[{name} {time}]\" -c gray \"cd client && yarn start\" -t \"HH:mm:ss\" \"cd server && yarn dev\""
+    "dev": "concurrently -n Client,Server -p \"[{name} {time}]\" -c gray \"cd client && yarn start\" -t \"HH:mm:ss\" \"cd server && yarn dev\"",
+    "deps": "yarn && concurrently -n ClientDeps,ServerDeps \"cd client && yarn\" \"cd server && yarn\""
   },
   "keywords": [],
   "author": "",
