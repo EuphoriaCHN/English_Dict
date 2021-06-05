@@ -1,5 +1,7 @@
+# My English Dictionary
+
 <p align="center">
-  <a href="https://www.wqh4u.cn">
+  <a href="javascript:void(0)">
     <img
       alt="Euphoria Blog"
       src="https://qlogo4.store.qq.com/qzone/879969355/879969355/100?1491838236"
