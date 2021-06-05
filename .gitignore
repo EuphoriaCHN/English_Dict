@@ -1,0 +1,24 @@
+# dependencies
+yarn.lock
+node_modules
+npm-debug.log
+yarn-error.log
+
+# production
+/client/dist
+
+# misc
+.DS_Store
+.idea
+.vscode
+
+
+# umi
+/client/src/.umi
+/client/src/.umi-production
+/client/src/.umi-test
+/client/.env.local
+
+# egg
+/server/logs/
+/server/run/

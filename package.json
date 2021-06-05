@@ -1,0 +1,15 @@
+{
+  "name": "EnglishDict",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently -n Client,Server -p \"[{name} {time}]\" -c gray \"cd client && yarn start\" -t \"HH:mm:ss\" \"cd server && yarn dev\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^6.2.0"
+  }
+}
