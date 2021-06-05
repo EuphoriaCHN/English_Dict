@@ -22,3 +22,6 @@ yarn-error.log
 # egg
 /server/logs/
 /server/run/
+
+# configuration files
+/server/config/constants.ts

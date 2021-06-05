@@ -6,6 +6,10 @@ const plugin: EggPlugin = {
   //   enable: true,
   //   package: 'egg-view-nunjucks',
   // },
+  redis: {
+    package: 'egg-redis',
+    enable: true
+  }
 };
 
 export default plugin;

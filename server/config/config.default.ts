@@ -1,11 +1,16 @@
 import { EggAppConfig, EggAppInfo, PowerPartial } from 'egg';
+import * as CONFIG from './constants';
 
 export default (appInfo: EggAppInfo) => {
-  const config = {} as PowerPartial<EggAppConfig>;
+  const config: PowerPartial<EggAppConfig> = {
+    redis: {
+      client: CONFIG.REDIS_CONFIG
+    }
+  };
 
   // override config from framework / plugin
   // use for cookie sign key, should change to your own and keep security
-  config.keys = appInfo.name + '_1622914595327_3112';
+  config.keys = appInfo.name + CONFIG.COOKIE_SALT;
 
   // add your egg config in here
   config.middleware = [];
