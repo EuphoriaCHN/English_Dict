@@ -31,6 +31,12 @@ yarn deps
 yarn dev
 ```
 
+### i18n
+
+```shell
+yarn i18n
+```
+
 ## Deployment
 
 > Stay tuned...

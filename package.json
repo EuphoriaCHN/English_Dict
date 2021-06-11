@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "concurrently -n Client,Server -p \"[{name} {time}]\" -c gray \"cd client && yarn start\" -t \"HH:mm:ss\" \"cd server && yarn dev\"",
-    "deps": "yarn && concurrently -n ClientDeps,ServerDeps \"cd client && yarn\" \"cd server && yarn\""
+    "deps": "yarn && concurrently -n ClientDeps,ServerDeps \"cd client && yarn\" \"cd server && yarn\"",
+    "i18n": "node ./scripts/i18n/index.js"
   },
   "keywords": [],
   "author": "",
