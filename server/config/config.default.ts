@@ -4,8 +4,8 @@ import * as CONFIG from './constants';
 export default (appInfo: EggAppInfo) => {
   const config: PowerPartial<EggAppConfig> = {
     redis: {
-      client: CONFIG.REDIS_CONFIG
-    }
+      client: CONFIG.REDIS_CONFIG,
+    },
   };
 
   // override config from framework / plugin
