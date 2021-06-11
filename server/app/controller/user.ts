@@ -7,6 +7,12 @@ export default class UserController extends Controller {
     public async accountLogin() {
         const { ctx } = this;
 
-        return ctx.helper.sha256('test');
+        const { account } = ctx.body;
+
+        const dbData = await ctx.service.user.queryOneUser({ account });
+
+        ctx.logger.debug(dbData);
+
+        return dbData;
     }
 }

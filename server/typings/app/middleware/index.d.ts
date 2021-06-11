@@ -3,9 +3,11 @@
 
 import 'egg';
 import ExportNormalCatch from '../../../app/middleware/normalCatch';
+import ExportNotFoundHandler from '../../../app/middleware/notFoundHandler';
 
 declare module 'egg' {
   interface IMiddleware {
     normalCatch: typeof ExportNormalCatch;
+    notFoundHandler: typeof ExportNotFoundHandler;
   }
 }

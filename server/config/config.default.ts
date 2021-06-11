@@ -16,7 +16,7 @@ export default (appInfo: EggAppInfo) => {
   config.keys = appInfo.name + CONFIG.COOKIE_SALT;
 
   // add your egg config in here
-  config.middleware = ['normalCatch'];
+  config.middleware = ['normalCatch', 'notFoundHandler'];
 
   // add your special config in here
   const bizConfig = {

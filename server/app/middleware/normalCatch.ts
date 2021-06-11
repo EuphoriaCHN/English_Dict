@@ -8,6 +8,7 @@ export default function (_options: any) {
 
         try {
             data = await next();
+            ctx.logger.info('');
         } catch (err) {
             if (err instanceof global.ServerError) {
                 statusCode = global.STATUS_CODE[err.statusKey];

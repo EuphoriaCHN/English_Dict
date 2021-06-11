@@ -5,5 +5,5 @@ export default (app: Application) => {
 
     const router = app.router.namespace('/user');
 
-    router.get('/accountLogin', controller.user.accountLogin);
+    router.post('/accountLogin', controller.user.accountLogin);
 };
