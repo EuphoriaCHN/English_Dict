@@ -3,7 +3,11 @@ import { DataTypes, Model, Optional } from 'sequelize';
 
 export interface EnglishDictUsersAttributes {
   id: number;
-  userName: string;
+  nickName: string;
+  account?: string;
+  password?: string;
+  createTime?: Date;
+  updateTime?: Date;
 }
 
 export type EnglishDictUsersPk = 'id';
@@ -18,7 +22,11 @@ export class EnglishDictUsers
   implements EnglishDictUsersAttributes
 {
   id!: number;
-  userName!: string;
+  nickName!: string;
+  account?: string;
+  password?: string;
+  createTime?: Date;
+  updateTime?: Date;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof EnglishDictUsers {
     EnglishDictUsers.init(
@@ -29,10 +37,33 @@ export class EnglishDictUsers
           allowNull: false,
           primaryKey: true,
         },
-        userName: {
+        nickName: {
           type: DataTypes.STRING(32),
           allowNull: false,
-          field: 'user_name',
+          field: 'nick_name',
+        },
+        account: {
+          type: DataTypes.STRING(32),
+          allowNull: false,
+          defaultValue: '',
+          unique: 'i_user_account_unique',
+        },
+        password: {
+          type: DataTypes.STRING(256),
+          allowNull: false,
+          defaultValue: '',
+        },
+        createTime: {
+          type: DataTypes.DATE,
+          allowNull: false,
+          defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP'),
+          field: 'create_time',
+        },
+        updateTime: {
+          type: DataTypes.DATE,
+          allowNull: false,
+          defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP'),
+          field: 'update_time',
         },
       },
       {
@@ -45,6 +76,12 @@ export class EnglishDictUsers
             unique: true,
             using: 'BTREE',
             fields: [{ name: 'id' }],
+          },
+          {
+            name: 'i_user_account_unique',
+            unique: true,
+            using: 'BTREE',
+            fields: [{ name: 'account' }],
           },
         ],
       }
