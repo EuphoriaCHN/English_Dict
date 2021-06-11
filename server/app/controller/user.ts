@@ -7,6 +7,8 @@ export default class UserController extends Controller {
     public async accountLogin() {
         const { ctx } = this;
 
-        ctx.body = '1';
+        throw new global.ServerError('COMMON_ERROR', 'fuck');
+
+        // ctx.body = '1';
     }
 }

@@ -1,6 +1,6 @@
 import { Application, IBoot } from 'egg';
 
-import { SEQUELIZE_CONFIG, STATUS_CODE } from './config/constants';
+import { SEQUELIZE_CONFIG, setGlobalData } from './config/constants';
 import { initModels } from './app/model/init-models';
 import * as sequelize from 'sequelize';
 
@@ -8,7 +8,7 @@ export default class Boot implements IBoot {
     constructor(private readonly _app: Application) {}
 
     configWillLoad() {
-        global.STATUS_CODE = STATUS_CODE;
+        setGlobalData();
     }
 
     configDidLoad() {}
