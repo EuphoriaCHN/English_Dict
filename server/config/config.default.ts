@@ -8,6 +8,11 @@ export default (appInfo: EggAppInfo) => {
     },
     logger: {
       outputJSON: true
+    },
+    security: {
+      csrf: {
+        enable: false
+      }
     }
   };
 
