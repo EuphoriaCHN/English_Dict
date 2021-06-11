@@ -10,6 +10,10 @@ const plugin: EggPlugin = {
     package: 'egg-redis',
     enable: true
   },
+  routerPlus: {
+    enable: true,
+    package: 'egg-router-plus',
+  }
 };
 
 export default plugin;
