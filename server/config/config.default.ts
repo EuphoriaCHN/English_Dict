@@ -13,7 +13,8 @@ export default (appInfo: EggAppInfo) => {
       csrf: {
         enable: false
       }
-    }
+    },
+    i18n: CONFIG.I18N_CONFIG
   };
 
   // override config from framework / plugin

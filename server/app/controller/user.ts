@@ -11,15 +11,15 @@ export default class UserController extends Controller {
 
         const { account, password } = ctx.request.body;
 
-        assert(typeof account === 'string' && !!account.length, 'Account is required parameter for accountLogin');
-        assert(typeof password === 'string' && !!account.length, 'Password is required parameter for accountLogin');
+        assert(typeof account === 'string' && !!account.length, ctx.t('{0} 参数对 {1} 来说是必须的', ['account', 'accountLogin']));
+        assert(typeof password === 'string' && !!account.length, ctx.t('{0} 参数对 {1} 来说是必须的', ['password', 'accountLogin']));
 
         const userData = await ctx.service.user.queryOneUser({ account });
 
-        assert(!!userData, '账户不存在');
+        assert(!!userData, ctx.t('账户不存在'));
 
         const inputPasswordHashed = ctx.helper.sha256(password);
-        assert(userData?.password === inputPasswordHashed, '密码错误');
+        assert(userData?.password === inputPasswordHashed, ctx.t('密码错误'));
 
         return true;
     }

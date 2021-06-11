@@ -15,12 +15,14 @@ export default class Boot implements IBoot {
 
     async willReady() {
         // inject sequelize orm to app instance
-        const sequelizeInstance = new sequelize.Sequelize(SEQUELIZE_CONFIG);
+        const sequelizeInstance = new sequelize.Sequelize(Object.assign({ logging: false }, SEQUELIZE_CONFIG));
         await sequelizeInstance.authenticate();
 
         initModels(sequelizeInstance);
         this._app.Sequelize = sequelize;
         this._app.model = sequelizeInstance.models as any;
-        (this._app.context as any).model = sequelizeInstance.models;
+
+        this._app.context.model = sequelizeInstance.models;
+        this._app.context.t = this._app.context.__;
     }
 }

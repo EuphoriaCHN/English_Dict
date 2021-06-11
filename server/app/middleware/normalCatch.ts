@@ -15,8 +15,8 @@ export default function (_options: any) {
             } else {
                 statusCode = global.STATUS_CODE.COMMON_ERROR;
             }
+            // ctx.logger.error(err.message);
             errorMessage = err.message;
-            ctx.logger.error(errorMessage);
         }
 
         ctx.body = {
