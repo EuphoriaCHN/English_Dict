@@ -1,7 +1,7 @@
 import { Application } from 'egg';
 
 export default (app: Application) => {
-    const controller = app.controller;
+    const { controller } = app;
 
     const router = app.router.namespace('/user');
 

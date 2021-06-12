@@ -27,6 +27,9 @@ declare global {
         export interface Global {
             STATUS_CODE: typeof STATUS_CODE;
             ServerError: typeof ServerError;
+            JWT_SECRET: string;
+            REDIS_EXPIRE_TIME: number;
+            AUTH_HTTP_HEADER_KEY: string;
         }
     }
 }
