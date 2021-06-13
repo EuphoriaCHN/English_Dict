@@ -12,7 +12,7 @@ export default class UtilsController extends Controller {
         const ctx = this.ctx;
         ctx.status = 200;
 
-        const { inputFromRequest } = ctx.request.query;
+        const { input: inputFromRequest } = ctx.request.query;
         const input = inputFromRequest.trim();
         
         assert(typeof input === 'string' && !!input.length, ctx.t('{0} 参数对 {1} 来说是必须的', ['input', 'universalTranslate']));
