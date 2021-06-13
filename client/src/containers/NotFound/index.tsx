@@ -1,9 +1,11 @@
 import React from 'react';
+import { useHistory } from 'umi';
 
 import './index.scss';
 
 function notFound() {
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
+    const _history = useHistory();
     
     React.useEffect(() => {
         if (!canvasRef.current) {
@@ -92,12 +94,16 @@ function notFound() {
         };
     }, []);
 
+    const handleOnLinkClick = React.useCallback(() => {
+        _history.replace('/');
+    }, []);
+
     const render = React.useMemo(() => (
         <div className={'notFound'}>
             <canvas className={'notFound-snow'} ref={canvasRef} />
             <div className={'notFound-label'}>
                 <h2>NOT FOUND</h2>
-                <a className={'notFound-label-link'}>Back to home</a>
+                <a className={'notFound-label-link'} onClick={handleOnLinkClick}>Back to home</a>
             </div>
             <div className={'notFound-ground'}>
                 <div className={'notFound-ground-mound'}>
