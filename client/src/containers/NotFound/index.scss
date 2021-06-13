@@ -51,6 +51,10 @@ $col-ground: #f6f9fa;
         text-align: center;
         line-height: 2em;
         font-size: 5vh;
+        
+        > h2 {
+            color: $col-fg;
+        }
 
         &-link {
             font-size: 0.6em;

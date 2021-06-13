@@ -8,3 +8,6 @@ declare module '*.svg' {
   const url: string;
   export default url;
 }
+
+declare var I18N_COOKIE_KEY: 'locale';
+declare var AUTHORIZATION_KEY: 'Authorization';

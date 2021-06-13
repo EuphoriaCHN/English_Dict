@@ -12,12 +12,12 @@ const DEFAULT_LANG = 'zh-CN';
 const CLIENT_SRC = path.resolve(__dirname, '../..', 'client/src');
 const SERVER_SRC = path.resolve(__dirname, '../..', 'server/app');
 
-const CLIENT_I18N_DIR = '';
+const CLIENT_I18N_DIR = path.resolve(CLIENT_SRC, 'common', 'locales');
 const SERVER_I18N_DIR = path.resolve(SERVER_SRC, 'i18n');
 
 (async function () {
     const taskQueue = [
-        // [CLIENT_SRC, CLIENT_I18N_DIR, require('./client-i18n-func')],
+        [CLIENT_SRC, CLIENT_I18N_DIR, require('./client-i18n-func')],
         [SERVER_SRC, SERVER_I18N_DIR, require('./server-i18n-func')]
     ];
 
@@ -27,7 +27,7 @@ const SERVER_I18N_DIR = path.resolve(SERVER_SRC, 'i18n');
         }
 
         // Scan & Parse
-        const stream = gulp.src([`${src}/**/*.ts`])
+        const stream = gulp.src(func.extensions.map(item => `${src}/**/*${item}`))
             .pipe(sort())
             .pipe(scanner({
                 debug: false,
@@ -60,7 +60,7 @@ const SERVER_I18N_DIR = path.resolve(SERVER_SRC, 'i18n');
         for (const fileName of i18nFileNames) {
             const filePath = path.resolve(i18nDir, fileName);
             if (fs.statSync(filePath).isDirectory()) {
-                return;
+                continue;
             }
 
             const lang = fileName.split(/^([a-zA-Z\-]+)\.json$/)[1];
@@ -73,11 +73,16 @@ const SERVER_I18N_DIR = path.resolve(SERVER_SRC, 'i18n');
                     fileData[key] = key;
                 }
                 fs.writeFileSync(filePath, JSON.stringify(fileData, null, 2), { encoding: 'utf8' });
-                return;
+                continue;
             }
 
             // Translate
             const translationKeys = Object.keys(fileData);
+
+            if (!translationKeys.length) {
+                continue;
+            }
+
             const { data } = await translate(translationKeys, {
                 tld: 'cn',
                 to: lang.startsWith('zh') ? lang.toLowerCase() : lang.split('-')[0].toLowerCase(),
@@ -85,7 +90,13 @@ const SERVER_I18N_DIR = path.resolve(SERVER_SRC, 'i18n');
                 client: 'dict-chrome-ex'
             });
 
-            data[0].map(i => i[0][0][0]).forEach((text, index) => (fileData[translationKeys[index]] = text));
+            if (translationKeys.length === 1) {
+                const { trans, orig } = data.sentences[0];
+                fileData[orig] = trans;
+            } else {
+                data[0].map(i => i[0][0][0]).forEach((text, index) => (fileData[translationKeys[index]] = text));
+            }
+
             fs.writeFileSync(filePath, JSON.stringify(fileData, null, 2), { encoding: 'utf8' });
         }
     }

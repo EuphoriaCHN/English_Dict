@@ -31,5 +31,9 @@ export default defineConfig({
     statsFilename: 'stats.json',
     logLevel: 'info',
     defaultSizes: 'parsed', // stat  // gzip
+  },
+  define: {
+    I18N_COOKIE_KEY: 'locale',
+    AUTHORIZATION_KEY: 'Authorization'
   }
 });

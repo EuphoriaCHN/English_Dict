@@ -1,12 +1,14 @@
 import React from 'react';
 import { useHistory } from 'umi';
+import { useTranslation } from 'react-i18next';
 
 import './index.scss';
 
 function notFound() {
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
     const _history = useHistory();
-    
+    const { t } = useTranslation();
+
     React.useEffect(() => {
         if (!canvasRef.current) {
             return;
@@ -48,12 +50,12 @@ function notFound() {
         }
 
         function onWindowResize() {
-			width = window.innerWidth;
-			height = window.innerHeight;
-			el.width = width;
-			el.height = height;
-			
-			createParticles((width * height) / 16000);
+            width = window.innerWidth;
+            height = window.innerHeight;
+            el.width = width;
+            el.height = height;
+
+            createParticles((width * height) / 16000);
         }
 
         function updateParticles() {
@@ -103,7 +105,7 @@ function notFound() {
             <canvas className={'notFound-snow'} ref={canvasRef} />
             <div className={'notFound-label'}>
                 <h2>NOT FOUND</h2>
-                <a className={'notFound-label-link'} onClick={handleOnLinkClick}>Back to home</a>
+                <a className={'notFound-label-link'} onClick={handleOnLinkClick}>{t('返回主页')}</a>
             </div>
             <div className={'notFound-ground'}>
                 <div className={'notFound-ground-mound'}>
