@@ -12,8 +12,11 @@ export default class UtilsController extends Controller {
         const ctx = this.ctx;
         ctx.status = 200;
 
-        const { input } = ctx.request.query;
+        const { inputFromRequest } = ctx.request.query;
+        const input = inputFromRequest.trim();
+        
         assert(typeof input === 'string' && !!input.length, ctx.t('{0} 参数对 {1} 来说是必须的', ['input', 'universalTranslate']));
+        assert(input.split(/ /).length === 1, ctx.t('只支持翻译单个单词'));
 
         const salt = Date.now();
         const curtime = Math.floor(salt / 1000);
@@ -25,6 +28,7 @@ export default class UtilsController extends Controller {
             method: 'POST',
             body: new URLSearchParams({
                 q: input,
+                // todo:: 更多的语种翻译？
                 from: 'en',
                 to: 'zh-CHS',
                 appKey: global.YOUDAO_TRANSLATE.APP_KEY,
