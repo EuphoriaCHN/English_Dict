@@ -4,10 +4,12 @@
 import 'egg';
 import ExportUser from '../../../app/controller/user';
 import ExportUtils from '../../../app/controller/utils';
+import ExportWordBase from '../../../app/controller/wordBase';
 
 declare module 'egg' {
   interface IController {
     user: ExportUser;
     utils: ExportUtils;
+    wordBase: ExportWordBase;
   }
 }

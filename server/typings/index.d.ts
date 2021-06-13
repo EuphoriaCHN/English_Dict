@@ -19,6 +19,7 @@ declare module 'egg' {
     export interface Context {
         model: IModel;
         t: (key: string, opts?: any) => string;
+        jwtUserLoginData?: any;
     }
 }
 

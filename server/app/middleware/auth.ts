@@ -12,9 +12,14 @@ export default async function (ctx: Context, next: () => Promise<any>) {
         // 缓存对比
         const tokenInCache = await ctx.app.redis.get(ctx.helper.getLoginRedisKey(tokenData.userID));
         assert(tokenInCache === jwtToken);
+
+        ctx.jwtUserLoginData = tokenData;
     } catch (err) {
         throw new global.ServerError('NOT_LOGIN', ctx.t('用户未登录'));
     }
 
-    return await next();
+    const resData = await next();
+    ctx.jwtUserLoginData = null;
+    
+    return resData;
 }
