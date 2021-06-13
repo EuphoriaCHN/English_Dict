@@ -4,5 +4,7 @@
   "账户不存在": "Account does not exist",
   "密码错误": "wrong password",
   "登录成功": "login successful",
+  "只支持翻译单个单词": "Only support single word translation",
+  "翻译服务不可用": "Translation service is unavailable",
   "用户未登录": "User is not logged in"
 }
