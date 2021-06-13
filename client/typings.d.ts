@@ -11,3 +11,4 @@ declare module '*.svg' {
 
 declare var I18N_COOKIE_KEY: 'locale';
 declare var AUTHORIZATION_KEY: 'Authorization';
+declare var DEV_IP: 'http://127.0.0.1:7001';

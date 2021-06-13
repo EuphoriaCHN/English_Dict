@@ -34,6 +34,7 @@ export default defineConfig({
   },
   define: {
     I18N_COOKIE_KEY: 'locale',
-    AUTHORIZATION_KEY: 'Authorization'
+    AUTHORIZATION_KEY: 'Authorization',
+    DEV_IP: 'http://127.0.0.1:7001'
   }
 });
