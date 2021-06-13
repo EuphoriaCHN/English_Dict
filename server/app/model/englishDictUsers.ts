@@ -1,5 +1,9 @@
 import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
+import type {
+  EnglishDictWordBase,
+  EnglishDictWordBaseId,
+} from './englishDictWordBase';
 
 export interface EnglishDictUsersAttributes {
   id: number;
@@ -27,6 +31,40 @@ export class EnglishDictUsers
   password?: string;
   createTime?: Date;
   updateTime?: Date;
+
+  // EnglishDictUsers hasMany EnglishDictWordBase via ownerId
+  englishDictWordBases!: EnglishDictWordBase[];
+  getEnglishDictWordBases!: Sequelize.HasManyGetAssociationsMixin<EnglishDictWordBase>;
+  setEnglishDictWordBases!: Sequelize.HasManySetAssociationsMixin<
+    EnglishDictWordBase,
+    EnglishDictWordBaseId
+  >;
+  addEnglishDictWordBasis!: Sequelize.HasManyAddAssociationMixin<
+    EnglishDictWordBase,
+    EnglishDictWordBaseId
+  >;
+  addEnglishDictWordBases!: Sequelize.HasManyAddAssociationsMixin<
+    EnglishDictWordBase,
+    EnglishDictWordBaseId
+  >;
+  createEnglishDictWordBasis!: Sequelize.HasManyCreateAssociationMixin<EnglishDictWordBase>;
+  removeEnglishDictWordBasis!: Sequelize.HasManyRemoveAssociationMixin<
+    EnglishDictWordBase,
+    EnglishDictWordBaseId
+  >;
+  removeEnglishDictWordBases!: Sequelize.HasManyRemoveAssociationsMixin<
+    EnglishDictWordBase,
+    EnglishDictWordBaseId
+  >;
+  hasEnglishDictWordBasis!: Sequelize.HasManyHasAssociationMixin<
+    EnglishDictWordBase,
+    EnglishDictWordBaseId
+  >;
+  hasEnglishDictWordBases!: Sequelize.HasManyHasAssociationsMixin<
+    EnglishDictWordBase,
+    EnglishDictWordBaseId
+  >;
+  countEnglishDictWordBases!: Sequelize.HasManyCountAssociationsMixin;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof EnglishDictUsers {
     EnglishDictUsers.init(
