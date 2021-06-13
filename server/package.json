@@ -37,12 +37,14 @@
     "egg-scripts": "^2.6.0",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.2.5",
+    "node-fetch": "^2.6.1",
     "sequelize": "^6.6.2"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^8.5.1",
     "@types/mocha": "^2.2.40",
     "@types/node": "^7.0.12",
+    "@types/node-fetch": "^2.5.10",
     "@types/supertest": "^2.0.0",
     "autod": "^3.0.1",
     "autod-egg": "^1.1.0",

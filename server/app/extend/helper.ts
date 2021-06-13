@@ -8,8 +8,7 @@ export default {
      */
     sha256(data: string | Buffer): string {
         const hash = crypto.createHash('sha256');
-        hash.update(data);
-        return hash.digest('hex');
+        return hash.update(data).digest('hex');
     },
     /**
      * 生成 JWT

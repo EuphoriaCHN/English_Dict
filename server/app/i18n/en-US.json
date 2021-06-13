@@ -1,5 +1,8 @@
 {
+  "已登录": "logged",
   "{0} 参数对 {1} 来说是必须的": "{0} parameter is required for {1}",
   "账户不存在": "Account does not exist",
-  "密码错误": "wrong password"
+  "密码错误": "wrong password",
+  "登录成功": "login successful",
+  "用户未登录": "User is not logged in"
 }

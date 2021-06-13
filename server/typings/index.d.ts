@@ -2,7 +2,7 @@ import 'egg';
 import { EggPluginItem, PlainObject } from 'egg';
 import * as sequelize from 'sequelize';
 
-import { STATUS_CODE, ServerError } from '../config/constants';
+import { STATUS_CODE, ServerError, YOUDAO_TRANSLATE } from '../config/constants';
 
 declare module 'egg' {
     export interface IModel extends sequelize.Sequelize, PlainObject { }
@@ -30,6 +30,7 @@ declare global {
             JWT_SECRET: string;
             REDIS_EXPIRE_TIME: number;
             AUTH_HTTP_HEADER_KEY: string;
+            YOUDAO_TRANSLATE: typeof YOUDAO_TRANSLATE;
         }
     }
 }
