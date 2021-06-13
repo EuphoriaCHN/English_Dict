@@ -14,7 +14,6 @@ export default class UserController extends Controller {
             try {
                 // 解析 JWT
                 const jwtData = ctx.helper.verifyJWT(jwtToken);
-                !!jwtData['iat'] && delete jwtData['iat'];
                 assert(!!jwtData['userID']);
 
                 // 对比缓存
@@ -22,7 +21,7 @@ export default class UserController extends Controller {
                 assert(tokenInRedis === jwtToken);
 
                 // 缓存生效，更新缓存
-                await this.app.redis.set(ctx.helper.getLoginRedisKey(jwtData.id || -1), jwtToken, 'EX', global.REDIS_EXPIRE_TIME);
+                await this.app.redis.set(ctx.helper.getLoginRedisKey(jwtData.userID || -1), jwtToken, 'EX', global.REDIS_EXPIRE_TIME);
                 return {
                     token: jwtToken,
                     message: ctx.t('已登录')
