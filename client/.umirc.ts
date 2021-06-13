@@ -9,8 +9,8 @@ export default defineConfig({
       component: '@/layouts/index',
       path: '*',
       routes: [
-        // { path: '/', component: '@/containers/Platform', exact: true },
-        // { path: '*', component: '@/containers/NotFound' }
+        { path: '/', component: '@/containers/Platform', exact: true },
+        { component: '@/containers/NotFound' }
       ]
     },
   ],
