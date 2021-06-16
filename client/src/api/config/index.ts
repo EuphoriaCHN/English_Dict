@@ -60,12 +60,6 @@ const instance = axios.create(config);
 
 // Axios 请求捕获，针对 get 请求需要序列化 Array 类型的参数
 instance.interceptors.request.use(value => {
-  if (!!value.data) {
-    value.data = {
-      data: value.data
-    }
-  }
-
   if ((value.method || 'get').toLowerCase() === 'get') {
     const newParams: { [k: string]: string } = {};
 
