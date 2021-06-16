@@ -9,6 +9,7 @@ export default defineConfig({
       component: '@/layouts/index',
       path: '*',
       routes: [
+        { path: '/Login', component: '@/containers/Login' },
         { path: '/', component: '@/containers/Platform', exact: true },
         { component: '@/containers/NotFound' }
       ]

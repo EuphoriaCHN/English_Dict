@@ -1,0 +1,144 @@
+$orContentWidth: 40px;
+
+.login {
+    background-color: rgba(245, 245, 245);
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &-box {
+        background-color: #fff;
+        box-sizing: border-box;
+
+        &-more {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+
+            &-button {
+                margin-bottom: 24px;
+                cursor: pointer;
+                transition: all 0.3s ease-in-out;
+                width: 100%;
+                height: 40px;
+                text-align: center;
+                line-height: 40px;
+
+                > * {
+                    color: #fff;
+                }
+
+                .btn-icon {
+                    display: inline-block;
+                    margin-right: 8px;
+                }
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+
+                &:hover {
+                    box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08),
+                        0 9px 28px 8px rgba(0, 0, 0, 0.05);
+                }
+            }
+
+            &::before {
+                content: "OR";
+                position: absolute;
+                border-radius: 50%;
+                background-color: #ddd;
+                width: $orContentWidth;
+                height: $orContentWidth;
+                text-align: center;
+                line-height: $orContentWidth;
+                letter-spacing: 2px;
+                color: #777;
+            }
+        }
+    }
+
+    &-title {
+        margin-bottom: 30px !important;
+        font-weight: 400 !important;
+    }
+
+    &-submit-btn {
+        margin-top: 30px;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .login {
+        &-box {
+            display: flex;
+            justify-content: space-between;
+            box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08),
+                0 9px 28px 8px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            padding: 40px;
+
+            > div {
+                height: 100%;
+                width: 50%;
+                box-sizing: border-box;
+            }
+
+            &-form {
+                padding-right: 40px;
+            }
+
+            &-more {
+                padding-left: 40px;
+
+                &::before {
+                    left: -$orContentWidth * 0.5;
+                    transform: translateY(-50%);
+                    top: 50%;
+                }
+            }
+        }
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .login {
+        &-box {
+            width: 900px;
+            height: 350px;
+        }
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1200px) {
+    .login {
+        &-box {
+            width: 700px;
+            height: 350px;
+        }
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .login {
+        &-box {
+            width: 100vw;
+            height: 100vh;
+            box-sizing: border-box;
+            padding: 10vh 40px;
+
+            &-form {
+                padding-bottom: 40px;
+            }
+
+            &-more {
+                padding-top: 40px;
+                display: none;
+            }
+        }
+    }
+}
