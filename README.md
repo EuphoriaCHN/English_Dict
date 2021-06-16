@@ -37,6 +37,32 @@ yarn dev
 yarn i18n
 ```
 
+#### Add new source language to project
+
+Edit `/scripts/i18n/index.js` to add new language:
+
+```javascript
+// Line 9
+const LANGS = ['zh-CN', 'en-US', /* New language */];
+```
+
+Edit `/client/src/components/LanguageSelector/index.tsx` to ensure ensure the normal display of the frontend. 
+
+```typescript
+// Line 19
+const languages: { [k: string]: string } = React.useMemo(() => ({
+    'zh-cn': '简体中文',
+    'en-us': 'English',
+    /* New language */
+}), []);
+```
+
+Finally, run `i18n` scripts again to generate i18n static locale:
+
+```shell
+yarn i18n
+```
+
 ## Deployment
 
 > Stay tuned...
