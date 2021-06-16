@@ -14,7 +14,11 @@ export default (appInfo: EggAppInfo) => {
         enable: false
       }
     },
-    i18n: CONFIG.I18N_CONFIG
+    i18n: CONFIG.I18N_CONFIG,
+    cors: {
+      origin: '*',
+      allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH'
+    }
   };
 
   // override config from framework / plugin
