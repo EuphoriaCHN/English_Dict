@@ -4,14 +4,14 @@ import Cookie from 'js-cookie';
 
 const langFromCookie = Cookie.get(I18N_COOKIE_KEY);
 if (!langFromCookie) {
-  Cookie.set(I18N_COOKIE_KEY, 'zh-CN', { expires: 365 });
+  Cookie.set(I18N_COOKIE_KEY, 'zh-cn', { expires: 365 });
 }
 
 const localeResources = require.context('./common/locales', false, /\.json$/, 'sync');
 const locales: { [lang: string]: { translation: { [key: string]: string }}} = {};
 
 localeResources.keys().forEach(key => {
-  locales[key.split(/([a-zA-Z-]+)\.json$/)[1]] = {
+  locales[key.split(/([a-zA-Z-]+)\.json$/)[1].toLowerCase()] = {
     translation: localeResources(key)
   };
 });
@@ -24,7 +24,7 @@ export async function initI18nextInstance () {
       },
       keySeparator: false,
       resources: locales,
-      lng: langFromCookie || 'zh-CN'
+      lng: langFromCookie?.toLowerCase() || 'zh-cn'
     }, resolve);
   });
 }

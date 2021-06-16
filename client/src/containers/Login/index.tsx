@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
+import LanguageSelector from '@/components/LanguageSelector';
 import { Typography, Form, Input, Button, message } from 'antd';
 
 import WeChatIcon from '@/common/images/Wechat';
@@ -41,6 +42,9 @@ function Login() {
 
     return (
         <div className={'login'}>
+            <div className={'login-header'}>
+                <LanguageSelector />
+            </div>
             <div className={'login-box'}>
                 <div className={'login-box-form'}>
                     <Typography.Title className={'login-title'} level={2}>{t('登录')}</Typography.Title>
