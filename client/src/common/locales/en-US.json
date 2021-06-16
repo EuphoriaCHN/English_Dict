@@ -1,3 +1,19 @@
 {
+  "功能开发中...": "Function development...",
+  "微信扫码登录": "WeChat scan code login",
+  "支付宝扫码登录": "Alipay scan code login",
+  "Github 授权登录": "Github authorized login",
+  "Google 授权登录": "Google authorized login",
+  "此项是必填项": "This item is required",
+  "用户名长度在 6 到 16 个字符之间": "Username length is between 6 and 16 characters",
+  "密码长度在 6 到 16 个字符之间": "Password length is between 6 and 16 characters",
+  "登录成功": "login successful",
+  "登录失败": "Login failed",
+  "登录": "log in",
+  "用户名": "username",
+  "请输入用户名": "please enter user name",
+  "密码": "password",
+  "请输入密码": "Please enter the password",
+  "现在登录": "Log in now",
   "返回主页": "return to home page"
 }
