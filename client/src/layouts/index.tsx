@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation } from 'umi';
 
 import { Layout } from 'antd';
 import Header from '@/components/Header';
@@ -10,17 +11,23 @@ import LoginWrapper from '@/components/LoginWrapper';
 import './index.scss';
 
 function LayoutWrapper(props: React.PropsWithChildren<{}>) {
+    const _location = useLocation();
+
     const renderContent = React.useMemo(() => {
-        const AuthContent = LoginWrapper(function (_: {}) {
-            return <div className={'container'}>{props.children}</div>;
-        });
+        if (/\/login/.test(_location.pathname)) {
+            return props.children;
+        }
+
+        const AuthContent = LoginWrapper(Header);
 
         return (
             <Layout className={'site-layout'}>
                 <Sider />
                 <Layout>
-                    <Header />
                     <AuthContent />
+                    <div className={'container'}>
+                        {props.children}
+                    </div>
                     <Footer />
                 </Layout>
             </Layout>
