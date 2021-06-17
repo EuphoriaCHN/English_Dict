@@ -1,5 +1,10 @@
+import { useSelector } from 'react-redux';
+import { Store } from '@/store';
+
 function Platform() {
-    return <h1>Platform</h1>;
+    const userStore = useSelector<Store, Store['user']>(state => state.user);
+
+    return <h1>{userStore.user.account}</h1>;
 }
 
 export default Platform;
