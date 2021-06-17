@@ -86,6 +86,19 @@ function Login() {
         }
     }, []);
 
+    React.useEffect(() => {
+        function handleWindowKeyDownEventListener(ev: KeyboardEvent) {
+            if (ev?.key?.toLowerCase() === 'enter') {
+                handleSubmit();
+            }
+        }
+
+        window.addEventListener('keyup', handleWindowKeyDownEventListener);
+        return () => {
+            window.removeEventListener('keyup', handleWindowKeyDownEventListener);
+        };
+    }, []);
+
     return (
         <div className={'login'}>
             <div className={'login-header'}>
