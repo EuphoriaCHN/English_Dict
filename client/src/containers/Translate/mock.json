@@ -1,0 +1,96 @@
+{
+    "returnPhrase": [
+      "hello"
+    ],
+    "query": "hello",
+    "errorCode": "0",
+    "l": "en2zh-CHS",
+    "tSpeakUrl": "https://openapi.youdao.com/ttsapi?q=%E4%BD%A0%E5%A5%BD&langType=zh-CHS&sign=ACA2ECC386D935ADD40E2190B59079FB&salt=1623929737353&voice=0&format=mp3&appKey=4572fc0ddd37796c&ttsVoiceStrict=false",
+    "web": [
+      {
+        "value": [
+          "您好",
+          "哈啰",
+          "喂"
+        ],
+        "key": "Hello"
+      },
+      {
+        "value": [
+          "凯蒂猫",
+          "吉蒂猫"
+        ],
+        "key": "Hello Kitty"
+      },
+      {
+        "value": [
+          "你好邻居"
+        ],
+        "key": "Hello Neighbor"
+      }
+    ],
+    "requestId": "96bce359-2174-43dd-a68b-d13ce15341ee",
+    "translation": [
+      "你好"
+    ],
+    "dict": {
+      "url": "yddict://m.youdao.com/dict?le=eng&q=hello"
+    },
+    "webdict": {
+      "url": "http://mobile.youdao.com/dict?le=eng&q=hello"
+    },
+    "basic": {
+      "exam_type": [
+        "初中",
+        "高中",
+        "CET4",
+        "CET6",
+        "考研"
+      ],
+      "us-phonetic": "həˈləʊ",
+      "phonetic": "həˈləʊ",
+      "uk-phonetic": "həˈləʊ",
+      "wfs": [
+        {
+          "wf": {
+            "name": "复数",
+            "value": "hellos"
+          }
+        },
+        {
+          "wf": {
+            "name": "第三人称单数",
+            "value": "helloes"
+          }
+        },
+        {
+          "wf": {
+            "name": "现在分词",
+            "value": "helloing"
+          }
+        },
+        {
+          "wf": {
+            "name": "过去式",
+            "value": "helloed"
+          }
+        },
+        {
+          "wf": {
+            "name": "过去分词",
+            "value": "helloed"
+          }
+        }
+      ],
+      "uk-speech": "https://openapi.youdao.com/ttsapi?q=hello&langType=en&sign=FF3EECC44A96F4A335279626813CE7ED&salt=1623929737353&voice=5&format=mp3&appKey=4572fc0ddd37796c&ttsVoiceStrict=false",
+      "explains": [
+        "int. 喂；哈罗，你好，您好（表示问候， 惊奇或唤起注意时的用语）",
+        "vi. 说（或大声说）“喂”；打招呼",
+        "n. “喂”的招呼声；打招呼，问候",
+        "n. （Hello）（法）埃洛（人名）"
+      ],
+      "us-speech": "https://openapi.youdao.com/ttsapi?q=hello&langType=en&sign=FF3EECC44A96F4A335279626813CE7ED&salt=1623929737353&voice=6&format=mp3&appKey=4572fc0ddd37796c&ttsVoiceStrict=false"
+    },
+    "isWord": true,
+    "speakUrl": "https://openapi.youdao.com/ttsapi?q=hello&langType=en&sign=FF3EECC44A96F4A335279626813CE7ED&salt=1623929737353&voice=0&format=mp3&appKey=4572fc0ddd37796c&ttsVoiceStrict=false"
+  }

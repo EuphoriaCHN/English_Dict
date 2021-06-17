@@ -1,3 +1,7 @@
+@mixin translateBoxBorder() {
+    border: 1px solid #d9d9d9;
+}
+
 .translate {
     &-header {
         display: flex;
@@ -25,20 +29,62 @@
         box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08),
             0 9px 28px 8px rgba(0, 0, 0, 0.05);
 
-        > * {
+        > div {
             width: 50%;
+            height: 28vh;
+            min-height: 200px;
+            max-height: 240px;
+            overflow: hidden;
+        }
+    }
+
+    &-input {
+        position: relative;
+
+        .translate-opts {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
         }
 
-        textarea {
+        > textarea {
+            width: 100% !important;
+            height: 100% !important;
             resize: none !important;
             font-size: 26px;
-            padding: 20px 60px 20px 20px;
+            padding: 20px 20px 50px 20px;
         }
+    }
 
-        .ant-input-clear-icon {
+    &-result {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
+        box-sizing: border-box;
+        padding: 20px;
+        @include translateBoxBorder();
+        border-left: none;
+
+        &-text {
             font-size: 26px;
-            transform: translateX(-16px) translateY(16px);
         }
+    }
+
+    &-opt-buttons {
+        > button {
+            margin-right: 8px;
+            color: rgb(87, 87, 87);
+        }
+    }
+
+    &-more {
+        width: 100%;
+        box-sizing: border-box;
+        @include translateBoxBorder();
+        margin-top: 32px;
+        background-color: #fff;
+        padding: 17px 31px;
     }
 }
 
@@ -57,13 +103,16 @@
 }
 
 @media screen and (max-width: 966px) {
+    $boxPaddingTop: 12px;
+    $boxPaddingLeft: 20px;
+
     .translate {
         &-header {
             justify-content: space-between;
 
             > * {
                 margin-right: 4px;
-    
+
                 &:last-child {
                     margin: 0;
                 }
@@ -77,19 +126,29 @@
         &-box {
             flex-direction: column;
 
-            > * {
+            > div {
                 width: 100%;
+                min-height: 110px;
+                max-height: 110px;
+                overflow: hidden;
+            }
+        }
+
+        &-input {
+            .translate-opts {
+                bottom: $boxPaddingTop;
             }
 
-            textarea {
+            > textarea {
                 font-size: 20px;
-                padding: 20px 60px 20px 20px;
+                padding: $boxPaddingTop $boxPaddingLeft;
             }
+        }
 
-            .ant-input-clear-icon {
-                font-size: 20px;
-                transform: translateX(-16px) translateY(16px);
-            }
+        &-result {
+            @include translateBoxBorder();
+            border-top: none;
+            padding: $boxPaddingTop $boxPaddingLeft;
         }
     }
 }
