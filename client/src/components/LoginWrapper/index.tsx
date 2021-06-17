@@ -3,9 +3,10 @@ import Cookie from 'js-cookie';
 import { useHistory, useLocation } from 'umi';
 import isJWT from 'validator/es/lib/isJWT';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { nanoid } from '@reduxjs/toolkit';
 import { setUser } from '@/store/UserStore';
+import { Store } from '@/store';
 
 import { message } from 'antd';
 import Loading from '@/components/Loading';
@@ -15,6 +16,7 @@ import { UserAPI } from '@/api';
 export default function LoginWrapper<T extends object>(Component: React.ComponentType<T>) {
     return function Wrapper(props: T) {
         const [loading, setLoading] = React.useState<boolean>(true);
+        const userStore = useSelector<Store, Store['user']>(state => state.user);
 
         const _history = useHistory();
         const _location = useLocation();
@@ -23,12 +25,18 @@ export default function LoginWrapper<T extends object>(Component: React.Componen
         const isLoginPage = /\/login/.test(_location.pathname);
 
         React.useEffect(() => {
+            if (!!userStore.user.userID) {
+                // 通过鉴权
+                setLoading(false);
+                return;
+            }
+
             const token = Cookie.get(AUTHORIZATION_KEY);
 
             if (!token || !isJWT(token)) {
                 !isLoginPage && _history.replace('/login');
                 setLoading(false);
-                return; 
+                return;
             }
 
             UserAPI.verificationUserLoginJWT().then(userData => {
