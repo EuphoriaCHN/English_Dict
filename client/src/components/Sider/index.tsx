@@ -4,6 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { Layout, Menu, Typography } from 'antd';
 import { TranslationOutlined } from '@ant-design/icons';
 
+import EuphoriaLogo from '@/common/images/Euphoria.png';
+
+import './index.scss';
+
 interface SiderMenuItem {
     title: string;
     icon: JSX.Element;
@@ -23,7 +27,10 @@ function Sider(this: any) {
 
     return (
         <Layout.Sider collapsed={collapsed} onCollapse={setCollapsed.bind(this, !collapsed)} collapsible>
-            <Typography.Title>{t('Hello')}</Typography.Title>
+            <div className={'sider-logo'}>
+                <img src={EuphoriaLogo} alt={'Logo'} className={'sider-logo-img'} />
+                {collapsed ? null : <Typography.Title level={2} className={'sider-logo-text'}>Euphoria</Typography.Title>}
+            </div>
             <Menu theme={'dark'} defaultSelectedKeys={['1']} mode={'inline'}>
                 {menuItem.map(item => {
                     if (Array.isArray(item.children)) {
