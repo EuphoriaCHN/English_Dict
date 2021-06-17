@@ -7,6 +7,11 @@ class UserAPI extends API {
         method: 'POST',
         url: '/accountLogin'
     });
+
+    verificationUserLoginJWT = UserAPI.sign({
+        method: 'GET',
+        url: '/verificationUserLoginJWT'
+    });
 }
 
 export default new UserAPI();
