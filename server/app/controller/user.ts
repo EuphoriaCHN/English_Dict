@@ -57,4 +57,13 @@ export default class UserController extends Controller {
             message: ctx.t('登录成功')
         };
     }
+
+    /**
+     * 判断当前 JWT 是否有效
+     */
+    public async verificationUserLoginJWT() {
+        this.ctx.status = 200;
+        
+        return this.ctx.jwtUserLoginData;
+    }
 }
