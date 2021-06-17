@@ -15,7 +15,7 @@ import { UserAPI } from '@/api';
 
 export default function LoginWrapper<T extends object>(Component: React.ComponentType<T>) {
     return function Wrapper(props: T) {
-        const [loading, setLoading] = React.useState<boolean>(true);
+        const [loading, setLoading] = React.useState<boolean>(false);
         const userStore = useSelector<Store, Store['user']>(state => state.user);
 
         const _history = useHistory();
@@ -27,7 +27,6 @@ export default function LoginWrapper<T extends object>(Component: React.Componen
         React.useEffect(() => {
             if (!!userStore.user.userID) {
                 // 通过鉴权
-                setLoading(false);
                 return;
             }
 
@@ -35,10 +34,10 @@ export default function LoginWrapper<T extends object>(Component: React.Componen
 
             if (!token || !isJWT(token)) {
                 !isLoginPage && _history.replace('/login');
-                setLoading(false);
                 return;
             }
 
+            setLoading(true);
             UserAPI.verificationUserLoginJWT().then(userData => {
                 _dispatch(setUser({
                     id: nanoid(),
