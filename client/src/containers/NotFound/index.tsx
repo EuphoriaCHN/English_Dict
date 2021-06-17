@@ -97,7 +97,7 @@ function notFound() {
     }, []);
 
     const handleOnLinkClick = React.useCallback(() => {
-        _history.replace('/');
+        _history.replace('/translate');
     }, []);
 
     const render = React.useMemo(() => (

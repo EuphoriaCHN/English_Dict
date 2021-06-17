@@ -10,7 +10,9 @@ export default defineConfig({
       path: '*',
       routes: [
         { path: '/Login', component: '@/containers/Login' },
-        { path: '/', component: '@/containers/Platform', exact: true },
+        { path: '/wordBase', component: '@/containers/WordBase' },
+        { path: '/translate', component: '@/containers/Translate' },
+        { path: '/', component: '@/containers/Translate', exact: true },
         { component: '@/containers/NotFound' }
       ]
     },

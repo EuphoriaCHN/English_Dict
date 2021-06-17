@@ -24,7 +24,9 @@ $col-ground: #f6f9fa;
 }
 
 .notFound {
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
     z-index: 1;
 
     width: 100vw;

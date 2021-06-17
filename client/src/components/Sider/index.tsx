@@ -1,11 +1,14 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import classnames from 'classnames';
+import { useHistory, useLocation } from 'umi';
 
 import { Layout, Menu, Typography } from 'antd';
-import { TranslationOutlined } from '@ant-design/icons';
+import { TranslationOutlined, DatabaseOutlined } from '@ant-design/icons';
 
 import EuphoriaLogo from '@/common/images/Euphoria.png';
+
+import { SelectEventHandler } from 'rc-menu/lib/interface';
 
 import './index.scss';
 
@@ -19,9 +22,35 @@ interface SiderMenuItem {
 function Sider(this: any) {
     const [collapsible, setCollapsible] = React.useState<boolean>(true);
     const [collapsed, setCollapsed] = React.useState<boolean>(false);
+    const [selectKey, setSelectKey] = React.useState<string>('');
+
     const { t } = useTranslation();
+    const _location = useLocation();
+    const _history = useHistory();
+
+    const handleOnMenuSelect = React.useCallback<SelectEventHandler>(({ key }) => {
+        setSelectKey(key);
+        _history.push(`/${key}`);
+    }, []);
+
+    const menuItem = React.useMemo<SiderMenuItem[]>(() => [{
+        title: t('在线翻译'),
+        key: 'translate',
+        icon: <TranslationOutlined />
+    }, {
+        title: t('我的词库'),
+        key: 'wordBase',
+        icon: <DatabaseOutlined />
+    }], []);
 
     React.useEffect(() => {
+        if (_location.pathname === '/') {
+            _history.replace('/translate');
+            return;
+        }
+
+        setSelectKey(_location.pathname.split(/\//)[1]);
+
         function onWindowResize() {
             // 移动端默认收起 sider，不允许扩张 sider
             if (document.documentElement.clientWidth < 768) {
@@ -38,19 +67,13 @@ function Sider(this: any) {
         };
     }, []);
 
-    const menuItem = React.useMemo<SiderMenuItem[]>(() => [{
-        title: t('在线翻译'),
-        key: 'translate',
-        icon: <TranslationOutlined />
-    }], []);
-
     return (
         <Layout.Sider collapsed={collapsed} onCollapse={setCollapsed.bind(this, !collapsed)} collapsible={collapsible}>
             <div className={classnames('sider-logo', { 'sider-logo-collapsed': collapsed })}>
                 <img src={EuphoriaLogo} alt={'Logo'} className={'sider-logo-img'} />
                 <Typography.Title level={2} className={'sider-logo-text'}>Euphoria</Typography.Title>
             </div>
-            <Menu theme={'dark'} defaultSelectedKeys={['1']} mode={'inline'}>
+            <Menu onSelect={handleOnMenuSelect} theme={'dark'} selectedKeys={[selectKey]} mode={'inline'}>
                 {menuItem.map(item => {
                     if (Array.isArray(item.children)) {
                         return (
