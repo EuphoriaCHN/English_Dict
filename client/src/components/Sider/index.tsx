@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import classnames from 'classnames';
 import { useHistory, useLocation } from 'umi';
+import { useWindowResize } from '@/common/utils';
 
 import { Layout, Menu, Typography } from 'antd';
 import { TranslationOutlined, DatabaseOutlined } from '@ant-design/icons';
@@ -43,6 +44,16 @@ function Sider(this: any) {
         icon: <DatabaseOutlined />
     }], []);
 
+    const handleOnWindowResize = React.useCallback(() => {
+        // 移动端默认收起 sider，不允许扩张 sider
+        if (document.documentElement.clientWidth < 768) {
+            setCollapsed(true);
+        }
+        setCollapsible(document.documentElement.clientWidth >= 768);
+    }, []);
+
+    useWindowResize(handleOnWindowResize);
+
     React.useEffect(() => {
         if (_location.pathname === '/') {
             _history.replace('/translate');
@@ -50,21 +61,7 @@ function Sider(this: any) {
         }
 
         setSelectKey(_location.pathname.split(/\//)[1]);
-
-        function onWindowResize() {
-            // 移动端默认收起 sider，不允许扩张 sider
-            if (document.documentElement.clientWidth < 768) {
-                setCollapsed(true);
-            }
-            setCollapsible(document.documentElement.clientWidth >= 768);
-        }
-
-        onWindowResize();
-        window.addEventListener('resize', onWindowResize);
-
-        return () => {
-            window.removeEventListener('resize', onWindowResize);
-        };
+        handleOnWindowResize();
     }, []);
 
     return (

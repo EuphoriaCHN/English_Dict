@@ -25,7 +25,7 @@ function LayoutWrapper(props: React.PropsWithChildren<{}>) {
                 <Sider />
                 <Layout>
                     <AuthContent />
-                    <div className={'container'}>
+                    <div className={'site-layout-container'}>
                         {props.children}
                     </div>
                     <Footer />

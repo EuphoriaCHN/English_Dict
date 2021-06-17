@@ -5,6 +5,8 @@ import { initI18nextInstance } from './i18n';
 import { Provider as ReduxProvider } from 'react-redux';
 import store from '@/store';
 
+import '@/common/styles/base.scss';
+
 export function rootContainer(LastRootContainer: any) {
     return (
         <I18nextProvider i18n={I18n}>
