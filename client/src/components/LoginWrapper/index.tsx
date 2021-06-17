@@ -8,6 +8,7 @@ import { nanoid } from '@reduxjs/toolkit';
 import { setUser } from '@/store/UserStore';
 
 import { message } from 'antd';
+import Loading from '@/components/Loading';
 
 import { UserAPI } from '@/api';
 
@@ -26,7 +27,7 @@ export default function LoginWrapper<T extends object>(Component: React.Componen
 
             if (!token || !isJWT(token)) {
                 !isLoginPage && _history.replace('/login');
-                // setLoading(false);
+                setLoading(false);
                 return; 
             }
 
@@ -39,9 +40,13 @@ export default function LoginWrapper<T extends object>(Component: React.Componen
                 message.error(err.message || JSON.stringify(err));
                 !isLoginPage && _history.replace('/login');
             }).finally(() => {
-                // setLoading(false);
+                setLoading(false);
             });
         }, []);
+
+        if (loading) {
+            return <Loading />
+        }
 
         return <Component {...props} />;
     }
