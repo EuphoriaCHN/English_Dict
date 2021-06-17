@@ -17,8 +17,26 @@ interface SiderMenuItem {
 }
 
 function Sider(this: any) {
+    const [collapsible, setCollapsible] = React.useState<boolean>(true);
     const [collapsed, setCollapsed] = React.useState<boolean>(false);
     const { t } = useTranslation();
+
+    React.useEffect(() => {
+        function onWindowResize() {
+            // 移动端默认收起 sider，不允许扩张 sider
+            if (document.documentElement.clientWidth < 768) {
+                setCollapsed(true);
+            }
+            setCollapsible(document.documentElement.clientWidth >= 768);
+        }
+
+        onWindowResize();
+        window.addEventListener('resize', onWindowResize);
+
+        return () => {
+            window.removeEventListener('resize', onWindowResize);
+        };
+    }, []);
 
     const menuItem = React.useMemo<SiderMenuItem[]>(() => [{
         title: t('在线翻译'),
@@ -27,7 +45,7 @@ function Sider(this: any) {
     }], []);
 
     return (
-        <Layout.Sider collapsed={collapsed} onCollapse={setCollapsed.bind(this, !collapsed)} collapsible>
+        <Layout.Sider collapsed={collapsed} onCollapse={setCollapsed.bind(this, !collapsed)} collapsible={collapsible}>
             <div className={classnames('sider-logo', { 'sider-logo-collapsed': collapsed })}>
                 <img src={EuphoriaLogo} alt={'Logo'} className={'sider-logo-img'} />
                 <Typography.Title level={2} className={'sider-logo-text'}>Euphoria</Typography.Title>

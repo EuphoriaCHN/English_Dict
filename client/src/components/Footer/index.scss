@@ -32,3 +32,13 @@ $footerHeight: 48px;
     }
   }
 }
+
+@media screen and (max-width: 768px) {
+  .footer {
+    justify-content: center;
+    
+    > div:first-child {
+      display: none;
+    }
+  }
+}
