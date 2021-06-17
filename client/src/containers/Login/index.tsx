@@ -81,7 +81,6 @@ function Login() {
         } catch (err) {
             message.error(err.message || JSON.stringify(err));
             message.error(t('登录失败'));
-        } finally {
             setLoading(false);
         }
     }, []);
