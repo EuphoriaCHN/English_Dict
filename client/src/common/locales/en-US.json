@@ -1,5 +1,6 @@
 {
   "在线翻译": "online translation",
+  "我的词库": "My thesaurus",
   "功能开发中...": "Function development...",
   "微信扫码登录": "WeChat scan code login",
   "支付宝扫码登录": "Alipay scan code login",
@@ -16,5 +17,13 @@
   "密码": "password",
   "请输入密码": "Please enter the password",
   "现在登录": "Log in now",
-  "返回主页": "return to home page"
+  "返回主页": "return to home page",
+  "目前仅支持单个英文单词翻译": "Currently only supports single English word translation",
+  "机器翻译失败": "Machine translation failed",
+  "目前源语言只支持英语": "Currently the source language only supports English",
+  "目前目标语言只支持简体中文": "Currently the target language only supports simplified Chinese",
+  "输入单个需要翻译的英文单词...": "Enter a single English word that needs to be translated...",
+  "发音": "pronunciation",
+  "收藏": "Favorites",
+  "复制": "copy"
 }
