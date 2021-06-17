@@ -17,8 +17,8 @@ function LanguageSelector(props: IProps) {
     const { i18n } = useTranslation();
 
     const languages: { [k: string]: string } = React.useMemo(() => ({
-        'zh-cn': '简体中文',
-        'en-us': 'English'
+        'zh-CN': '简体中文',
+        'en-US': 'English'
     }), []);
 
     const handleOnClick = React.useCallback<MenuClickEventHandler>(({ key }) => {
@@ -27,7 +27,7 @@ function LanguageSelector(props: IProps) {
         }
         Cookie.set(I18N_COOKIE_KEY, key, { expires: 365 });
         location.reload();
-    }, [])
+    }, []);
 
     const render = React.useMemo(() => (
         <Dropdown
