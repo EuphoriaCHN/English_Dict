@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import classnames from 'classnames';
 
 import { Layout, Menu, Typography } from 'antd';
 import { TranslationOutlined } from '@ant-design/icons';
@@ -27,9 +28,9 @@ function Sider(this: any) {
 
     return (
         <Layout.Sider collapsed={collapsed} onCollapse={setCollapsed.bind(this, !collapsed)} collapsible>
-            <div className={'sider-logo'}>
+            <div className={classnames('sider-logo', { 'sider-logo-collapsed': collapsed })}>
                 <img src={EuphoriaLogo} alt={'Logo'} className={'sider-logo-img'} />
-                {collapsed ? null : <Typography.Title level={2} className={'sider-logo-text'}>Euphoria</Typography.Title>}
+                <Typography.Title level={2} className={'sider-logo-text'}>Euphoria</Typography.Title>
             </div>
             <Menu theme={'dark'} defaultSelectedKeys={['1']} mode={'inline'}>
                 {menuItem.map(item => {

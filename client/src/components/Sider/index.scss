@@ -9,6 +9,7 @@
 
     &-img {
         height: 32px;
+        transition: all .2s linear;
     }
 
     &-text {
@@ -17,5 +18,15 @@
         font-size: 20px !important;
         color: #fff !important;
         margin: 0 0 0 16px !important;
+    }
+}
+
+.sider-logo-collapsed {
+    .sider-logo-img {
+        transform: translateX(8px);
+    }
+
+    .sider-logo-text {
+        display: none;
     }
 }
