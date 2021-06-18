@@ -4,7 +4,7 @@ import debounce from 'lodash-es/debounce';
 import classnames from 'classnames';
 import { UtilsAPI } from '@/api';
 
-import { Input, Select, Tooltip, message, Button } from 'antd';
+import { Input, Select, Tooltip, message, Button, Tag } from 'antd';
 import { SwapOutlined, SoundOutlined, CopyOutlined, StarOutlined } from '@ant-design/icons';
 
 import mock from './mock.json';
@@ -33,7 +33,7 @@ function Translate() {
             // const data = await UtilsAPI.universalTranslate({ input: value });
             // setTranslationResult(data);
 
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise(resolve => setTimeout(resolve, 500));
             setTranslationResult(mock as any);
         } catch (err) {
             message.error(err.message || JSON.stringify(err));
@@ -56,6 +56,44 @@ function Translate() {
             </Tooltip>
         </div>
     ), []);
+
+    const renderPhonetic = React.useMemo(() => {
+        if (!translationResult || !translationResult.basic) {
+            return;
+        }
+        const usPhonetic = translationResult.basic['us-phonetic'];
+        const ukPhonetic = translationResult.basic['uk-phonetic'];
+
+        const usSpeech = translationResult.basic['us-speech'];
+        const ukSpeech = translationResult.basic['uk-speech'];
+
+        const data: any[] = [];
+
+        if (!!usPhonetic) {
+            data.push({ key: 'us', phonetic: usPhonetic, title: '美' });
+        }
+        if (!!ukPhonetic) {
+            data.push({ key: 'uk', phonetic: ukPhonetic, title: '英' });
+        }
+
+        if (!data.length) {
+            return null;
+        }
+
+        return (
+            <React.Fragment>
+                {data.map(item => (
+                    <span key={item.key} className={'translate-more-phonetic-item'}>
+                        <b>{item.title}</b>
+                        <span>[{item.phonetic}]</span>
+                        <Tooltip title={t('发音')}>
+                            <Button size={'small'} icon={<SoundOutlined />} type={'link'} />
+                        </Tooltip>
+                    </span>
+                ))}
+            </React.Fragment>
+        );
+    }, [translationResult]);
 
     const renderResultBox = React.useMemo(() => (
         <div className={'translate-box'}>
@@ -90,16 +128,41 @@ function Translate() {
         </div>
     ), [translationResult]);
 
-    const renderMoreResult = React.useMemo(() => (
-        <div className={classnames('translate-more', { 'el-hidden': !translationResult })}>
-            <div className={'translate-more-text'}>{translationResult?.query}</div>
-            <div className={'translate-more-phonetic'}>
-                {[translationResult?.basic['us-phonetic'], translationResult?.basic['uk-phonetic']].map(phonetic => (
-                    <span></span>
-                ))}
+    const renderMoreResult = React.useMemo(() => {
+        if (!translationResult) {
+            return null;
+        }
+        return (
+            <div className={classnames('translate-more', { 'el-hidden': !translationResult })}>
+                <div className={'translate-more-text'}>{translationResult?.query}</div>
+                <div className={'translate-more-phonetic'}>
+                    {renderPhonetic}
+                </div>
+                <div className={'translate-more-explains'}>
+                    {(translationResult.basic.explains || []).map(explain => {
+                        const [part, ...labelArr] = explain.split(/ /);
+                        const label = labelArr.join(' ');
+                        return (
+                            <p key={label}>
+                                <span>{part}</span>
+                                <span>{label}</span>
+                            </p>
+                        );
+                    })}
+                </div>
+                <div className={'translate-more-wfs'}>
+                    {(translationResult.basic.wfs || []).map(({ wf }) => (
+                        <span>{wf.name}：{wf.value}</span>
+                    ))}
+                </div>
+                <div className={'translate-more-exam'}>
+                    {(translationResult.basic.exam_type || []).map(type => (
+                        <Tag key={`${translationResult.query}-${type}`}>{type}</Tag>
+                    ))}
+                </div>
             </div>
-        </div>
-    ), [translationResult]);
+        );
+    }, [translationResult, renderPhonetic]);
 
     return (
         <div className={'container'}>
