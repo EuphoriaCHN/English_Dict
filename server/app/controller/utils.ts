@@ -14,7 +14,7 @@ export default class UtilsController extends Controller {
 
         const { input: inputFromRequest } = ctx.request.query;
         const input = inputFromRequest.trim();
-        
+
         assert(typeof input === 'string' && !!input.length, ctx.t('{0} 参数对 {1} 来说是必须的', ['input', 'universalTranslate']));
         assert(input.split(/ /).length === 1, ctx.t('只支持翻译单个单词'));
 
@@ -24,33 +24,42 @@ export default class UtilsController extends Controller {
 
         const sign = ctx.helper.sha256(`${global.YOUDAO_TRANSLATE.APP_KEY}${inputToken}${salt}${curtime}${global.YOUDAO_TRANSLATE.SECRET_KEY}`);
 
-        return await fetch('https://openapi.youdao.com/api', {
-            method: 'POST',
-            body: new URLSearchParams({
-                q: input,
-                // todo:: 更多的语种翻译？
-                from: 'en',
-                to: 'zh-CHS',
-                appKey: global.YOUDAO_TRANSLATE.APP_KEY,
-                salt: salt.toString(),
-                sign,
-                signType: 'v3',
-                curtime: curtime.toString(),
-                ext: 'mp3',
-                voice: '0',
-                strict: 'true',
+        const [transData, existsWordBases] = await Promise.all([
+            fetch('https://openapi.youdao.com/api', {
+                method: 'POST',
+                body: new URLSearchParams({
+                    q: input,
+                    // todo:: 更多的语种翻译？
+                    from: 'en',
+                    to: 'zh-CHS',
+                    appKey: global.YOUDAO_TRANSLATE.APP_KEY,
+                    salt: salt.toString(),
+                    sign,
+                    signType: 'v3',
+                    curtime: curtime.toString(),
+                    ext: 'mp3',
+                    voice: '0',
+                    strict: 'true',
+                }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+                }
+            }).then(val => val.json(), err => {
+                ctx.logger.error(`有道翻译 API：${err.message}`);
+                return null;
+            }).then(data => {
+                if (!data || data.errorCode !== '0') {
+                    throw new global.ServerError('COMMON_ERROR', ctx.t('翻译服务不可用'));
+                }
+                return data;
             }),
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-            }
-        }).then(val => val.json(), err => {
-            ctx.logger.error(`有道翻译 API：${err.message}`);
-            return null;
-        }).then(data => {
-            if (!data || data.errorCode !== '0') {
-                throw new global.ServerError('COMMON_ERROR', ctx.t('翻译服务不可用'));
-            }
-            return data;
-        });
+            // todo:: 更多的语种翻译？
+            ctx.service.wordBase.getWordExistWordBases(ctx.jwtUserLoginData.userID, input, 'en-US', 'zh-CN')
+        ]);
+
+        return {
+            transData,
+            existsWordBases
+        };
     }
 }

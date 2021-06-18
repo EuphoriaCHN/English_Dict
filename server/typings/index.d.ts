@@ -5,7 +5,7 @@ import * as sequelize from 'sequelize';
 import { STATUS_CODE, ServerError, YOUDAO_TRANSLATE } from '../config/constants';
 
 declare module 'egg' {
-    export interface IModel extends sequelize.Sequelize, PlainObject { }
+    export interface IModel extends PlainObject { }
 
     export interface EggPlugin {
         redis?: EggPluginItem;
@@ -13,10 +13,12 @@ declare module 'egg' {
 
     export interface Application {
         Sequelize: typeof sequelize;
+        sequelize: sequelize.Sequelize;
         model: IModel;
     }
 
     export interface Context {
+        sequelize: sequelize.Sequelize;
         model: IModel;
         t: (key: string, opts?: any) => string;
         jwtUserLoginData?: any;

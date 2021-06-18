@@ -7,7 +7,7 @@ import { handleSoundVoiceOnMouseEnter, handleCopyText } from '@/common/utils';
 
 import SelectWordBaseModel from '@/components/SelectWordBaseModel';
 import { Input, Select, Tooltip, message, Button, Tag } from 'antd';
-import { SwapOutlined, SoundOutlined, CopyOutlined, StarOutlined } from '@ant-design/icons';
+import { SwapOutlined, SoundOutlined, CopyOutlined, StarOutlined, StarFilled } from '@ant-design/icons';
 
 import mock from './mock.json';
 
@@ -15,7 +15,10 @@ import './index.scss';
 
 function Translate(this: any) {
     const [addToWordBaseModelText, setAddToWordBaseModelText] = React.useState<string>('');
+
     const [translationResult, setTranslationResult] = React.useState<EN2ZHTranslationResult | null>(null);
+    const [existsInWordBase, setExistsInWordBase] = React.useState<boolean>(false);
+
     const audioRef = React.useRef<HTMLAudioElement>(null);
 
     const { t } = useTranslation();
@@ -46,11 +49,13 @@ function Translate(this: any) {
         }
 
         try {
-            // const data = await UtilsAPI.universalTranslate({ input: value });
-            // setTranslationResult(data);
+            // const { transData, existsWordBases } = await UtilsAPI.universalTranslate({ input: value });
+            // setTranslationResult(transData);
+            // setExistsInWordBase(!!existsWordBases.length);
 
             await new Promise(resolve => setTimeout(resolve, 500));
             setTranslationResult(mock as any);
+            setExistsInWordBase(true);
         } catch (err) {
             message.error(err.message || JSON.stringify(err));
             message.error(t('机器翻译失败'));
@@ -130,8 +135,15 @@ function Translate(this: any) {
                             onMouseEnter={handleSoundVoiceOnMouseEnter(translationResult?.speakUrl || '', audioRef.current)}
                         />
                     </Tooltip>
-                    <Tooltip title={t('添加到词库')}>
-                        <Button icon={<StarOutlined />} type={'link'} onClick={setAddToWordBaseModelText.bind(this, translationResult?.query || '')} />
+                    <Tooltip title={existsInWordBase ? t('从词库中移除') : t('添加到词库')}>
+                        <Button
+                            className={classnames({
+                                'exists-in-word-base': existsInWordBase
+                            })}
+                            icon={existsInWordBase ? <StarFilled /> : <StarOutlined />} 
+                            type={'link'} 
+                            onClick={setAddToWordBaseModelText.bind(this, translationResult?.query || '')}
+                        />
                     </Tooltip>
                 </div>
             </div>
@@ -159,7 +171,7 @@ function Translate(this: any) {
                 </div>
             </div>
         </div>
-    ), [translationResult]);
+    ), [translationResult, existsInWordBase]);
 
     const renderMoreResult = React.useMemo(() => {
         if (!translationResult) {

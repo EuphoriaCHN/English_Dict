@@ -20,9 +20,11 @@ export default class Boot implements IBoot {
 
         initModels(sequelizeInstance);
         this._app.Sequelize = sequelize;
+        this._app.sequelize = sequelizeInstance;
         this._app.model = sequelizeInstance.models as any;
 
         this._app.context.model = sequelizeInstance.models;
         this._app.context.t = this._app.context.__;
+        this._app.context.sequelize = sequelizeInstance;
     }
 }

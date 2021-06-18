@@ -3,7 +3,7 @@ import { API } from '../config';
 class UtilsAPI extends API {
     static PREFIX = '/utils';
 
-    universalTranslate = UtilsAPI.sign<any, EN2ZHTranslationResult>({
+    universalTranslate = UtilsAPI.sign({
         method: 'GET',
         url: '/universalTranslate'
     });
