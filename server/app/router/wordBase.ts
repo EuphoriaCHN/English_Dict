@@ -6,4 +6,5 @@ export default (app: Application) => {
     const router = app.router.namespace('/wb');
 
     router.get('/getWordBaseByUserID', middleware.auth, controller.wordBase.getWordBaseByUserID);
+    router.post('/createWordBaseWord', middleware.auth, controller.wordBase.createWordBaseWord);
 };

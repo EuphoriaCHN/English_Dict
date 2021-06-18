@@ -2,9 +2,10 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import debounce from 'lodash-es/debounce';
 import classnames from 'classnames';
-import { UtilsAPI } from '@/api';
+import { UtilsAPI, WordBaseAPI } from '@/api';
 import { handleSoundVoiceOnMouseEnter, handleCopyText } from '@/common/utils';
 
+import SelectWordBaseModel from '@/components/SelectWordBaseModel';
 import { Input, Select, Tooltip, message, Button, Tag } from 'antd';
 import { SwapOutlined, SoundOutlined, CopyOutlined, StarOutlined } from '@ant-design/icons';
 
@@ -12,10 +13,23 @@ import mock from './mock.json';
 
 import './index.scss';
 
-function Translate() {
-    const audioRef = React.useRef<HTMLAudioElement>(null);
+function Translate(this: any) {
+    const [addToWordBaseModelText, setAddToWordBaseModelText] = React.useState<string>('');
     const [translationResult, setTranslationResult] = React.useState<EN2ZHTranslationResult | null>(null);
+    const audioRef = React.useRef<HTMLAudioElement>(null);
+
     const { t } = useTranslation();
+
+    /**
+     * 添加当前文案到词库
+     */
+    const handleAddTextToWordBase = React.useCallback(async (wordBaseID: number) => {
+        await WordBaseAPI.createWordBaseWord({
+            wordBaseID,
+            trans: translationResult
+        });
+        message.success(t('创建成功'));
+    }, [translationResult]);
 
     const handleTextAreaChange = React.useCallback(debounce(async (ev: React.ChangeEvent<HTMLTextAreaElement>) => {
         const value = ev.target.value.trim();
@@ -116,8 +130,8 @@ function Translate() {
                             onMouseEnter={handleSoundVoiceOnMouseEnter(translationResult?.speakUrl || '', audioRef.current)}
                         />
                     </Tooltip>
-                    <Tooltip title={t('收藏')}>
-                        <Button icon={<StarOutlined />} type={'link'} />
+                    <Tooltip title={t('添加到词库')}>
+                        <Button icon={<StarOutlined />} type={'link'} onClick={setAddToWordBaseModelText.bind(this, translationResult?.query || '')} />
                     </Tooltip>
                 </div>
             </div>
@@ -186,7 +200,8 @@ function Translate() {
     }, [translationResult, renderPhonetic]);
 
     return (
-        <div className={'container'}>
+        <React.Fragment>
+            <div className={'container'}>
             <div className={'translate'}>
                 {renderHeader}
                 {renderResultBox}
@@ -194,6 +209,15 @@ function Translate() {
             </div>
             <audio ref={audioRef} style={{ display: 'none' }} />
         </div>
+        <SelectWordBaseModel
+            visible={!!addToWordBaseModelText}
+            onCancel={setAddToWordBaseModelText.bind(this, '')}
+            label={t('将单词 "{_nowInputText}" 添加到哪个词库', {
+                _nowInputText: addToWordBaseModelText
+            })}
+            onOk={handleAddTextToWordBase}
+        />
+        </React.Fragment>
     );
 }
 

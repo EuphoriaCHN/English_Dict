@@ -31,6 +31,10 @@ export async function initI18nextInstance () {
     keySeparator: false,
     resources: locales,
     lng: langFromCookie,
+    interpolation: {
+      prefix: '{',
+      suffix: '}'
+    }
   });
 }
 

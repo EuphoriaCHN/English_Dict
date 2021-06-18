@@ -74,3 +74,12 @@ declare interface EN2ZHTranslationResult {
    */
   speakUrl: string;
 }
+
+declare interface WordBase {
+  id: number;
+  createTime: string;
+  name: string;
+  sourceLang: string;
+  targetLang: string;
+  updateTime: string;
+}
