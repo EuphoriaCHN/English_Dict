@@ -18,6 +18,8 @@ export function rootContainer(LastRootContainer: any) {
 }
 
 export function render(oldRender: any) {
+    window.AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.msAudioContext;
+    
     initI18nextInstance().then(() => {
         oldRender();
     });

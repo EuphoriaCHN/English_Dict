@@ -19,7 +19,7 @@ declare interface EN2ZHTranslationResult {
   /**
    * 主要翻译结果语音 URL
    */
-  tSpaceUrl: string;
+  tSpeakUrl: string;
   /**
    * 同义联想
    */

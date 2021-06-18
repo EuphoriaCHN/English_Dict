@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import debounce from 'lodash-es/debounce';
 import classnames from 'classnames';
 import { UtilsAPI } from '@/api';
+import { handleSoundVoiceOnMouseEnter } from '@/common/utils';
 
 import { Input, Select, Tooltip, message, Button, Tag } from 'antd';
 import { SwapOutlined, SoundOutlined, CopyOutlined, StarOutlined } from '@ant-design/icons';
@@ -12,6 +13,7 @@ import mock from './mock.json';
 import './index.scss';
 
 function Translate() {
+    const audioRef = React.useRef<HTMLAudioElement>(null);
     const [translationResult, setTranslationResult] = React.useState<EN2ZHTranslationResult | null>(null);
     const { t } = useTranslation();
 
@@ -70,10 +72,10 @@ function Translate() {
         const data: any[] = [];
 
         if (!!usPhonetic) {
-            data.push({ key: 'us', phonetic: usPhonetic, title: '美' });
+            data.push({ key: 'us', phonetic: usPhonetic, title: '美', speech: usSpeech });
         }
         if (!!ukPhonetic) {
-            data.push({ key: 'uk', phonetic: ukPhonetic, title: '英' });
+            data.push({ key: 'uk', phonetic: ukPhonetic, title: '英', speech: ukSpeech });
         }
 
         if (!data.length) {
@@ -87,7 +89,12 @@ function Translate() {
                         <b>{item.title}</b>
                         <span>[{item.phonetic}]</span>
                         <Tooltip title={t('发音')}>
-                            <Button size={'small'} icon={<SoundOutlined />} type={'link'} />
+                            <Button
+                                onMouseEnter={handleSoundVoiceOnMouseEnter(item.speech, audioRef.current)}
+                                size={'small'}
+                                icon={<SoundOutlined />}
+                                type={'link'}
+                            />
                         </Tooltip>
                     </span>
                 ))}
@@ -103,7 +110,7 @@ function Translate() {
                     'el-hidden': !translationResult
                 })}>
                     <Tooltip title={t('发音')}>
-                        <Button icon={<SoundOutlined />} type={'link'} />
+                        <Button icon={<SoundOutlined />} type={'link'} onMouseEnter={handleSoundVoiceOnMouseEnter(translationResult?.speakUrl || '', audioRef.current)} />
                     </Tooltip>
                     <Tooltip title={t('收藏')}>
                         <Button icon={<StarOutlined />} type={'link'} />
@@ -118,7 +125,7 @@ function Translate() {
                     'el-hidden': !translationResult
                 })}>
                     <Tooltip title={t('发音')}>
-                        <Button icon={<SoundOutlined />} type={'link'} />
+                        <Button icon={<SoundOutlined />} type={'link'} onMouseEnter={handleSoundVoiceOnMouseEnter(translationResult?.tSpeakUrl || '', audioRef.current)} />
                     </Tooltip>
                     <Tooltip title={t('复制')}>
                         <Button icon={<CopyOutlined />} type={'link'} />
@@ -151,8 +158,10 @@ function Translate() {
                     })}
                 </div>
                 <div className={'translate-more-wfs'}>
-                    {(translationResult.basic.wfs || []).map(({ wf }) => (
-                        <span>{wf.name}：{wf.value}</span>
+                    {(translationResult.basic.wfs || []).map(({ wf }, index) => (
+                        <span key={`${translationResult.query}-${wf.value}-${index}`}>
+                            {wf.name}：{wf.value}
+                        </span>
                     ))}
                 </div>
                 <div className={'translate-more-exam'}>
@@ -171,6 +180,7 @@ function Translate() {
                 {renderResultBox}
                 {renderMoreResult}
             </div>
+            <audio ref={audioRef} style={{ display: 'none' }} />
         </div>
     );
 }
