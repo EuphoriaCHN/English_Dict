@@ -6,5 +6,6 @@
   "登录成功": "login successful",
   "只支持翻译单个单词": "Only support single word translation",
   "翻译服务不可用": "Translation service is unavailable",
+  "错误的 trans 参数格式，缺少 query": "Wrong format of trans parameter, lack of query",
   "用户未登录": "User is not logged in"
 }

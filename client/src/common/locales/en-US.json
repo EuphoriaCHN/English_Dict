@@ -1,4 +1,11 @@
 {
+  "未选择词库": "No thesaurus selected",
+  "用户未登录": "User is not logged in",
+  "获取用户词库错误": "Error in getting user thesaurus",
+  "选择词库": "Choose a thesaurus",
+  "添加": "Add to",
+  "取消": "cancel",
+  "请选择词库": "Please select a dictionary",
   "在线翻译": "online translation",
   "我的词库": "My thesaurus",
   "功能开发中...": "Function development...",
@@ -18,12 +25,15 @@
   "请输入密码": "Please enter the password",
   "现在登录": "Log in now",
   "返回主页": "return to home page",
+  "创建成功": "Created successfully",
   "目前仅支持单个英文单词翻译": "Currently only supports single English word translation",
   "机器翻译失败": "Machine translation failed",
   "目前源语言只支持英语": "Currently the source language only supports English",
   "目前目标语言只支持简体中文": "Currently the target language only supports simplified Chinese",
-  "输入单个需要翻译的英文单词...": "Enter a single English word that needs to be translated...",
   "发音": "pronunciation",
-  "收藏": "Favorites",
-  "复制": "copy"
+  "输入单个需要翻译的英文单词...": "Enter a single English word that needs to be translated...",
+  "添加到词库": "Add to thesaurus",
+  "复制": "copy",
+  "复制成功": "Copy successfully",
+  "将单词 \"{_nowInputText}\" 添加到哪个词库": "Add the word &quot;{_nowInputText}&quot; to which dictionary"
 }
