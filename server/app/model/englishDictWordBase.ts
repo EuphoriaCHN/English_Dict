@@ -8,6 +8,8 @@ export interface EnglishDictWordBaseAttributes {
   createTime?: Date;
   updateTime?: Date;
   ownerId: number;
+  sourceLang?: string;
+  targetLang: string;
 }
 
 export type EnglishDictWordBasePk = 'id';
@@ -29,6 +31,8 @@ export class EnglishDictWordBase
   createTime?: Date;
   updateTime?: Date;
   ownerId!: number;
+  sourceLang?: string;
+  targetLang!: string;
 
   // EnglishDictWordBase belongsTo EnglishDictUsers via ownerId
   owner!: EnglishDictUsers;
@@ -76,6 +80,19 @@ export class EnglishDictWordBase
             key: 'id',
           },
           field: 'owner_id',
+        },
+        sourceLang: {
+          type: DataTypes.STRING(16),
+          allowNull: false,
+          defaultValue: '',
+          comment: '源语言',
+          field: 'source_lang',
+        },
+        targetLang: {
+          type: DataTypes.STRING(16),
+          allowNull: false,
+          comment: '目标语言',
+          field: 'target_lang',
         },
       },
       {
