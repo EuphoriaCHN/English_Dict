@@ -24,6 +24,7 @@
     "@reduxjs/toolkit": "^1.6.0",
     "@umijs/preset-react": "1.x",
     "axios": "^0.21.1",
+    "copy-to-clipboard": "^3.3.1",
     "i18next": "^20.3.1",
     "js-cookie": "^2.2.1",
     "lodash-es": "^4.17.21",

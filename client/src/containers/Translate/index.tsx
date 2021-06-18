@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import debounce from 'lodash-es/debounce';
 import classnames from 'classnames';
 import { UtilsAPI } from '@/api';
-import { handleSoundVoiceOnMouseEnter } from '@/common/utils';
+import { handleSoundVoiceOnMouseEnter, handleCopyText } from '@/common/utils';
 
 import { Input, Select, Tooltip, message, Button, Tag } from 'antd';
 import { SwapOutlined, SoundOutlined, CopyOutlined, StarOutlined } from '@ant-design/icons';
@@ -110,7 +110,11 @@ function Translate() {
                     'el-hidden': !translationResult
                 })}>
                     <Tooltip title={t('发音')}>
-                        <Button icon={<SoundOutlined />} type={'link'} onMouseEnter={handleSoundVoiceOnMouseEnter(translationResult?.speakUrl || '', audioRef.current)} />
+                        <Button
+                            icon={<SoundOutlined />}
+                            type={'link'}
+                            onMouseEnter={handleSoundVoiceOnMouseEnter(translationResult?.speakUrl || '', audioRef.current)}
+                        />
                     </Tooltip>
                     <Tooltip title={t('收藏')}>
                         <Button icon={<StarOutlined />} type={'link'} />
@@ -125,10 +129,18 @@ function Translate() {
                     'el-hidden': !translationResult
                 })}>
                     <Tooltip title={t('发音')}>
-                        <Button icon={<SoundOutlined />} type={'link'} onMouseEnter={handleSoundVoiceOnMouseEnter(translationResult?.tSpeakUrl || '', audioRef.current)} />
+                        <Button
+                            icon={<SoundOutlined />}
+                            type={'link'}
+                            onMouseEnter={handleSoundVoiceOnMouseEnter(translationResult?.tSpeakUrl || '', audioRef.current)}
+                        />
                     </Tooltip>
                     <Tooltip title={t('复制')}>
-                        <Button icon={<CopyOutlined />} type={'link'} />
+                        <Button
+                            icon={<CopyOutlined />}
+                            type={'link'}
+                            onClick={handleCopyText((translationResult?.translation || [''])[0], () => message.success(t('复制成功')))}
+                        />
                     </Tooltip>
                 </div>
             </div>
