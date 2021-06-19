@@ -41,8 +41,8 @@ function Translate(this: any) {
      */
     const handleDeleteTextFromWordBase = React.useCallback(async (wordBaseID: number, nowSelectData: any) => {
         await WordBaseAPI.deleteWordBaseWord({
-            wordBaseID, 
-            content: nowSelectData.content, 
+            wordBaseID,
+            content: nowSelectData.content,
             ID: nowSelectData.wordBaseWordID
         });
         message.success(t('删除成功'));
@@ -69,6 +69,10 @@ function Translate(this: any) {
             const { transData, existsWordBases } = await UtilsAPI.universalTranslate({ input: value });
             setTranslationResult(transData);
             setExistsWordBases(existsWordBases);
+
+            if (!(transData as EN2ZHTranslationResult).isWord) {
+                message.error(t('{_queryWord} 不是一个英文单词', { _queryWord: value }));
+            }
 
             // await new Promise(resolve => setTimeout(resolve, 500));
             // setTranslationResult(mock as any);
@@ -197,7 +201,7 @@ function Translate(this: any) {
     }, [translationResult, existsWordBases]);
 
     const renderMoreResult = React.useMemo(() => {
-        if (!translationResult) {
+        if (!translationResult || !translationResult.isWord) {
             return null;
         }
         return (
@@ -206,30 +210,34 @@ function Translate(this: any) {
                 <div className={'translate-more-phonetic'}>
                     {renderPhonetic}
                 </div>
-                <div className={'translate-more-explains'}>
-                    {(translationResult.basic.explains || []).map(explain => {
-                        const [part, ...labelArr] = explain.split(/ /);
-                        const label = labelArr.join(' ');
-                        return (
-                            <p key={label}>
-                                <span>{part}</span>
-                                <span>{label}</span>
-                            </p>
-                        );
-                    })}
-                </div>
-                <div className={'translate-more-wfs'}>
-                    {(translationResult.basic.wfs || []).map(({ wf }, index) => (
-                        <span key={`${translationResult.query}-${wf.value}-${index}`}>
-                            {wf.name}：{wf.value}
-                        </span>
-                    ))}
-                </div>
-                <div className={'translate-more-exam'}>
-                    {(translationResult.basic.exam_type || []).map(type => (
-                        <Tag key={`${translationResult.query}-${type}`}>{type}</Tag>
-                    ))}
-                </div>
+                {!!translationResult.basic ? (
+                    <React.Fragment>
+                        <div className={'translate-more-explains'}>
+                            {(translationResult.basic.explains || []).map(explain => {
+                                const [part, ...labelArr] = explain.split(/ /);
+                                const label = labelArr.join(' ');
+                                return (
+                                    <p key={label}>
+                                        <span>{part}</span>
+                                        <span>{label}</span>
+                                    </p>
+                                );
+                            })}
+                        </div>
+                        <div className={'translate-more-wfs'}>
+                            {(translationResult.basic.wfs || []).map(({ wf }, index) => (
+                                <span key={`${translationResult.query}-${wf.value}-${index}`}>
+                                    {wf.name}：{wf.value}
+                                </span>
+                            ))}
+                        </div>
+                        <div className={'translate-more-exam'}>
+                            {(translationResult.basic.exam_type || []).map(type => (
+                                <Tag key={`${translationResult.query}-${type}`}>{type}</Tag>
+                            ))}
+                        </div>
+                    </React.Fragment>
+                ) : null}
             </div>
         );
     }, [translationResult, renderPhonetic]);
