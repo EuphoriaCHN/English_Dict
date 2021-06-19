@@ -7,4 +7,5 @@ export default (app: Application) => {
 
     router.get('/getWordBaseByUserID', middleware.auth, controller.wordBase.getWordBaseByUserID);
     router.post('/createWordBaseWord', middleware.auth, controller.wordBase.createWordBaseWord);
+    router.delete('/deleteWordBaseWord', middleware.auth, controller.wordBase.deleteWordBaseWord);
 };

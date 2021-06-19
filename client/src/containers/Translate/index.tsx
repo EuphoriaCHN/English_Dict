@@ -6,7 +6,7 @@ import { UtilsAPI, WordBaseAPI } from '@/api';
 import { handleSoundVoiceOnMouseEnter, handleCopyText } from '@/common/utils';
 
 import SelectWordBaseModel from '@/components/SelectWordBaseModel';
-import { Input, Select, Tooltip, message, Button, Tag } from 'antd';
+import { Input, Select, Tooltip, message, Button, Tag, Descriptions } from 'antd';
 import { SwapOutlined, SoundOutlined, CopyOutlined, StarOutlined, StarFilled } from '@ant-design/icons';
 
 import mock from './mock.json';
@@ -15,9 +15,10 @@ import './index.scss';
 
 function Translate(this: any) {
     const [addToWordBaseModelText, setAddToWordBaseModelText] = React.useState<string>('');
+    const [removeFromWordBaseModelData, setRemoveFromWordBaseModelData] = React.useState<any[]>([]);
 
     const [translationResult, setTranslationResult] = React.useState<EN2ZHTranslationResult | null>(null);
-    const [existsInWordBase, setExistsInWordBase] = React.useState<boolean>(false);
+    const [existsWordBases, setExistsWordBases] = React.useState<any[]>([]);
 
     const audioRef = React.useRef<HTMLAudioElement>(null);
 
@@ -27,12 +28,28 @@ function Translate(this: any) {
      * 添加当前文案到词库
      */
     const handleAddTextToWordBase = React.useCallback(async (wordBaseID: number) => {
-        await WordBaseAPI.createWordBaseWord({
+        const insertData = await WordBaseAPI.createWordBaseWord({
             wordBaseID,
             trans: translationResult
         });
+        setExistsWordBases(prev => prev.concat([insertData]));
         message.success(t('创建成功'));
     }, [translationResult]);
+
+    /**
+     * 从词库中删除当前翻译的词
+     */
+    const handleDeleteTextFromWordBase = React.useCallback(async (wordBaseID: number, nowSelectData: any) => {
+        await WordBaseAPI.deleteWordBaseWord({
+            wordBaseID, 
+            content: nowSelectData.content, 
+            ID: nowSelectData.wordBaseWordID
+        });
+        message.success(t('删除成功'));
+        setExistsWordBases(prev => {
+            return prev.filter(item => item.wordBaseWordID !== nowSelectData.wordBaseWordID)
+        });
+    }, []);
 
     const handleTextAreaChange = React.useCallback(debounce(async (ev: React.ChangeEvent<HTMLTextAreaElement>) => {
         const value = ev.target.value.trim();
@@ -49,13 +66,13 @@ function Translate(this: any) {
         }
 
         try {
-            // const { transData, existsWordBases } = await UtilsAPI.universalTranslate({ input: value });
-            // setTranslationResult(transData);
-            // setExistsInWordBase(!!existsWordBases.length);
+            const { transData, existsWordBases } = await UtilsAPI.universalTranslate({ input: value });
+            setTranslationResult(transData);
+            setExistsWordBases(existsWordBases);
 
-            await new Promise(resolve => setTimeout(resolve, 500));
-            setTranslationResult(mock as any);
-            setExistsInWordBase(true);
+            // await new Promise(resolve => setTimeout(resolve, 500));
+            // setTranslationResult(mock as any);
+            // setExistsWordBases([{ id: 1, name: '默认词库', content: 'hello', wordCreateTime: '2021-06-19 02:21:54', examCount: 0, passCount: 0, wordBaseWordID: 1 }]);
         } catch (err) {
             message.error(err.message || JSON.stringify(err));
             message.error(t('机器翻译失败'));
@@ -121,57 +138,63 @@ function Translate(this: any) {
         );
     }, [translationResult]);
 
-    const renderResultBox = React.useMemo(() => (
-        <div className={'translate-box'}>
-            <div className={'translate-input'}>
-                <Input.TextArea placeholder={t('输入单个需要翻译的英文单词...')} onChange={handleTextAreaChange} rows={5} autoSize={false} />
-                <div className={classnames('translate-opts translate-opt-buttons', {
-                    'el-hidden': !translationResult
-                })}>
-                    <Tooltip title={t('发音')}>
-                        <Button
-                            icon={<SoundOutlined />}
-                            type={'link'}
-                            onMouseEnter={handleSoundVoiceOnMouseEnter(translationResult?.speakUrl || '', audioRef.current)}
-                        />
-                    </Tooltip>
-                    <Tooltip title={existsInWordBase ? t('从词库中移除') : t('添加到词库')}>
-                        <Button
-                            className={classnames({
-                                'exists-in-word-base': existsInWordBase
-                            })}
-                            icon={existsInWordBase ? <StarFilled /> : <StarOutlined />} 
-                            type={'link'} 
-                            onClick={setAddToWordBaseModelText.bind(this, translationResult?.query || '')}
-                        />
-                    </Tooltip>
+    const renderResultBox = React.useMemo(() => {
+        const exists = !!existsWordBases.length;
+        const query = translationResult?.query || '';
+        const translation = (translationResult?.translation || [''])[0];
+
+        return (
+            <div className={'translate-box'}>
+                <div className={'translate-input'}>
+                    <Input.TextArea placeholder={t('输入单个需要翻译的英文单词...')} onChange={handleTextAreaChange} rows={5} autoSize={false} />
+                    <div className={classnames('translate-opts translate-opt-buttons', {
+                        'el-hidden': !translationResult
+                    })}>
+                        <Tooltip title={t('发音')}>
+                            <Button
+                                icon={<SoundOutlined />}
+                                type={'link'}
+                                onMouseEnter={handleSoundVoiceOnMouseEnter(translationResult?.speakUrl || '', audioRef.current)}
+                            />
+                        </Tooltip>
+                        <Tooltip title={exists ? t('从词库中移除') : t('添加到词库')}>
+                            <Button
+                                className={classnames({
+                                    'exists-in-word-base': exists
+                                })}
+                                icon={exists ? <StarFilled /> : <StarOutlined />}
+                                type={'link'}
+                                onClick={exists ? setRemoveFromWordBaseModelData.bind(this, existsWordBases) : setAddToWordBaseModelText.bind(this, query)}
+                            />
+                        </Tooltip>
+                    </div>
+                </div>
+                <div className={'translate-result'}>
+                    <div className={classnames('translate-result-text', {
+                        'el-hidden': !translationResult
+                    })}>{translation}</div>
+                    <div className={classnames('translate-result-opts translate-opt-buttons', {
+                        'el-hidden': !translationResult
+                    })}>
+                        <Tooltip title={t('发音')}>
+                            <Button
+                                icon={<SoundOutlined />}
+                                type={'link'}
+                                onMouseEnter={handleSoundVoiceOnMouseEnter(translationResult?.tSpeakUrl || '', audioRef.current)}
+                            />
+                        </Tooltip>
+                        <Tooltip title={t('复制')}>
+                            <Button
+                                icon={<CopyOutlined />}
+                                type={'link'}
+                                onClick={handleCopyText(translation, () => message.success(t('复制成功')))}
+                            />
+                        </Tooltip>
+                    </div>
                 </div>
             </div>
-            <div className={'translate-result'}>
-                <div className={classnames('translate-result-text', {
-                    'el-hidden': !translationResult
-                })}>{(translationResult?.translation || [''])[0]}</div>
-                <div className={classnames('translate-result-opts translate-opt-buttons', {
-                    'el-hidden': !translationResult
-                })}>
-                    <Tooltip title={t('发音')}>
-                        <Button
-                            icon={<SoundOutlined />}
-                            type={'link'}
-                            onMouseEnter={handleSoundVoiceOnMouseEnter(translationResult?.tSpeakUrl || '', audioRef.current)}
-                        />
-                    </Tooltip>
-                    <Tooltip title={t('复制')}>
-                        <Button
-                            icon={<CopyOutlined />}
-                            type={'link'}
-                            onClick={handleCopyText((translationResult?.translation || [''])[0], () => message.success(t('复制成功')))}
-                        />
-                    </Tooltip>
-                </div>
-            </div>
-        </div>
-    ), [translationResult, existsInWordBase]);
+        );
+    }, [translationResult, existsWordBases]);
 
     const renderMoreResult = React.useMemo(() => {
         if (!translationResult) {
@@ -211,24 +234,51 @@ function Translate(this: any) {
         );
     }, [translationResult, renderPhonetic]);
 
+    const renderDeleteWordFromWordBaseModelContent = React.useCallback((defaultElement: JSX.Element, nowSelectData: any) => {
+        if (!nowSelectData) {
+            return defaultElement;
+        }
+        return (
+            <React.Fragment>
+                {defaultElement}
+                <Descriptions title={''} bordered style={{ marginTop: 12 }}>
+                    <Descriptions.Item span={2} label={t('文案')}>{nowSelectData.content}</Descriptions.Item>
+                    <Descriptions.Item span={2} label={t('创建时间')}>{nowSelectData.wordCreateTime}</Descriptions.Item>
+                    <Descriptions.Item span={2} label={t('出题次数')}>{nowSelectData.examCount}</Descriptions.Item>
+                    <Descriptions.Item span={2} label={t('正确次数')}>{nowSelectData.passCount}</Descriptions.Item>
+                </Descriptions>
+            </React.Fragment>
+        );
+    }, []);
+
     return (
         <React.Fragment>
             <div className={'container'}>
-            <div className={'translate'}>
-                {renderHeader}
-                {renderResultBox}
-                {renderMoreResult}
+                <div className={'translate'}>
+                    {renderHeader}
+                    {renderResultBox}
+                    {renderMoreResult}
+                </div>
+                <audio ref={audioRef} style={{ display: 'none' }} />
             </div>
-            <audio ref={audioRef} style={{ display: 'none' }} />
-        </div>
-        <SelectWordBaseModel
-            visible={!!addToWordBaseModelText}
-            onCancel={setAddToWordBaseModelText.bind(this, '')}
-            label={t('将单词 "{_nowInputText}" 添加到哪个词库', {
-                _nowInputText: addToWordBaseModelText
-            })}
-            onOk={handleAddTextToWordBase}
-        />
+            <SelectWordBaseModel
+                visible={!!addToWordBaseModelText}
+                onCancel={setAddToWordBaseModelText.bind(this, '')}
+                label={t('将单词 "{_nowInputText}" 添加到哪个词库', {
+                    _nowInputText: addToWordBaseModelText
+                })}
+                onOk={handleAddTextToWordBase}
+            />
+            <SelectWordBaseModel
+                visible={!!removeFromWordBaseModelData.length}
+                onCancel={setRemoveFromWordBaseModelData.bind(this, [])}
+                label={t('请选择从哪个词库中移除')}
+                onOk={handleDeleteTextFromWordBase}
+                data={removeFromWordBaseModelData}
+                renderContent={renderDeleteWordFromWordBaseModelContent}
+                okText={t('删除')}
+                okButtonProps={{ danger: true }}
+            />
         </React.Fragment>
     );
 }

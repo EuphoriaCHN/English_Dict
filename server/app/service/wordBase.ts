@@ -1,4 +1,6 @@
-import { Service } from 'egg';
+import { IModel, Service } from 'egg';
+import { WhereOptions } from 'sequelize/types';
+import { EnglishDictWordBaseAttributes } from '../model/englishDictWordBase';
 
 export default class WordBaseService extends Service {
     /**
@@ -23,7 +25,13 @@ export default class WordBaseService extends Service {
      */
     public async getWordExistWordBases(userID: number | string, content: string, sourceLang?: string, targetLang?: string) {
         return this.ctx.sequelize.query(`SELECT 
-            b.name, b.id 
+            b.name, 
+            b.id,
+            a.content,
+            a.create_time as wordCreateTime,
+            a.exam_count as examCount,
+            a.pass_count as passCount,
+            a.id as wordBaseWordID 
         from
             english_dict_word_base_words as a, 
             english_dict_word_base as b 
@@ -40,5 +48,14 @@ export default class WordBaseService extends Service {
                 WHERE
                     owner_id = ${userID}
             )`, { type:  this.app.Sequelize.QueryTypes.SELECT });
+    }
+
+    /**
+     * 查询某个词库信息
+     */
+    public async querySingleWordBase(query: WhereOptions<EnglishDictWordBaseAttributes>) {
+        return this.ctx.model.EnglishDictWordBase.findOne({
+            where: query
+        });
     }
 }

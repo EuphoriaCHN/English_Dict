@@ -12,6 +12,11 @@ class WordBaseAPI extends API {
         method: 'POST',
         url: '/createWordBaseWord'
     });
+
+    deleteWordBaseWord = WordBaseAPI.sign({
+        method: 'DELETE',
+        url: '/deleteWordBaseWord'
+    });
 }
 
 export default new WordBaseAPI();

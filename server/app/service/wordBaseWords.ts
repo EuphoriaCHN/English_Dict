@@ -11,4 +11,17 @@ export default class WordBaseWordsService extends Service {
             translationResult: JSON.stringify(trans)
         });
     }
+
+    /**
+     * 删除一个词库词
+     */
+    public async deleteWordBaseWord(wordBaseID: number, content: string, ID: number) {
+        return this.ctx.model.EnglishDictWordBaseWords.destroy({
+            where: {
+                ownerBaseId: wordBaseID,
+                content,
+                id: ID
+            }
+        });
+    }
 }
