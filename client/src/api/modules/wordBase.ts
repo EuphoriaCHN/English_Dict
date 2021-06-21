@@ -3,7 +3,7 @@ import { API } from '../config';
 class WordBaseAPI extends API {
     static PREFIX = '/wb';
 
-    getWordBaseByUserID = WordBaseAPI.sign({
+    getUserWordBases = WordBaseAPI.sign({
         method: 'GET',
         url: '/getWordBaseByUserID'
     });

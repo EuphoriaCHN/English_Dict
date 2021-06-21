@@ -48,11 +48,13 @@ function Sider(this: any) {
         // 移动端默认收起 sider，不允许扩张 sider
         if (document.documentElement.clientWidth < 768) {
             setCollapsed(true);
+        } else {
+            setCollapsed(false);
         }
         setCollapsible(document.documentElement.clientWidth >= 768);
     }, []);
 
-    useWindowResize(handleOnWindowResize);
+    useWindowResize(handleOnWindowResize, 200);
 
     React.useEffect(() => {
         if (_location.pathname === '/') {

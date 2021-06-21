@@ -4,13 +4,11 @@ import copy from 'copy-to-clipboard';
 import debounce from 'lodash-es/debounce';
 import noop from 'lodash-es/noop';
 
-import { message } from 'antd';
-
 /**
  * window resize hook
  */
-export function useWindowResize(callback: (ev: UIEvent) => void) {
-    const ref = React.useRef(callback);
+export function useWindowResize(callback: (ev: UIEvent) => void, debounceTime?: number) {
+    const ref = React.useRef(!!debounceTime ? debounce(callback, debounceTime) : callback);
 
     React.useEffect(() => {
         window.addEventListener('resize', ref.current);
@@ -44,4 +42,34 @@ export function handleCopyText(text: string, callback?: Function) {
         copy(text);
         typeof callback === 'function' && callback(text);
     }
+}
+
+/**
+ * 计算 offset & limit
+ */
+export function getPaginationData(currentPage: number, pageSize: number) {
+    return {
+        limit: pageSize,
+        offset: pageSize * (currentPage - 1)
+    };
+}
+
+/**
+ * Safe JSON.parse
+ */
+export function safeParse<T extends Dict = Dict>(jsonString: string, onError: Function = noop, fallback: T = {} as T): T {
+    try {
+        const data = JSON.parse(jsonString);
+        return data;
+    } catch(err) {
+        typeof onError === 'function' && onError(err);
+        return fallback || {};
+    }
+}
+
+/**
+ * 全站 Format Time
+ */
+export function formatTime(timeString: moment.MomentInput) {
+    return window.moment(timeString).fromNow();
 }

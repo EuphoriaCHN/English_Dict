@@ -13,6 +13,10 @@ declare var I18N_COOKIE_KEY: 'locale';
 declare var AUTHORIZATION_KEY: 'Authorization';
 declare var DEV_IP: 'http://127.0.0.1:7001';
 
+declare interface Dict {
+  [k: string]: any;
+}
+
 declare interface EN2ZHTranslationResult {
   returnPhrase: string[]
   query: string;
@@ -82,4 +86,14 @@ declare interface WordBase {
   sourceLang: string;
   targetLang: string;
   updateTime: string;
+}
+
+declare interface WordBaseWord {
+  content: string;
+  createTime: string;
+  examCount: number;
+  id: number;
+  ownerBaseId: number;
+  passCount: number;
+  translationResult: string;
 }

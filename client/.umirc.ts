@@ -21,7 +21,7 @@ export default defineConfig({
   history: {
     type: 'browser'
   },
-  ignoreMomentLocale: true,
+  // ignoreMomentLocale: true,
   polyfill: {
     imports: ['core-js/stable']
   },

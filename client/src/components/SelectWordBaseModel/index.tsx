@@ -100,7 +100,7 @@ function SelectWordBaseModel<T extends { id: number; name: string } = WordBase>(
         setLoading(true);
 
         try {
-            const data = await WordBaseAPI.getWordBaseByUserID({ userID: userStore.user.userID });
+            const data = await WordBaseAPI.getUserWordBases();
             setUserWordBase(data);
             if (!!data.length) {
                 _form.setFields([{ name: 'wordBase', value: data[0].id }]);
