@@ -3,6 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { WordBaseAPI, WordBaseWordsAPI } from '@/api';
 import { getPaginationData, safeParse, formatTime, useWindowResize } from '@/common/utils';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { nanoid } from '@reduxjs/toolkit';
+import { Store } from '@/store';
+import { setWordBases } from '@/store/WordBaseStore';
+
 import { message, Spin, Select, Form, Table, Button, Dropdown, Menu } from 'antd';
 import { EllipsisOutlined, DeleteFilled, SoundFilled } from '@ant-design/icons';
 
@@ -13,7 +18,6 @@ import './index.scss';
 
 function WordBase() {
     const [words, setWords] = React.useState<WordBaseWord[]>([]);
-    const [wordBases, setWordBases] = React.useState<WordBase[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
     const [isMiniScreen, setIsMiniScreen] = React.useState<boolean>(false);
 
@@ -22,6 +26,9 @@ function WordBase() {
 
     const { t } = useTranslation();
     const [_form] = Form.useForm();
+    const _dispatch = useDispatch();
+
+    const wordBaseStore = useSelector<Store, Store['wordBase']>(state => state.wordBase);
 
     const getWords = React.useCallback(async (_currentPage?: number, _pageSize: number = 10) => {
         const { wordBase: wordBaseID } = _form.getFieldsValue(['wordBase']);
@@ -39,6 +46,34 @@ function WordBase() {
             setLoading(false);
         }
     }, [currentPage]);
+
+    const initData = React.useCallback(async () => {
+        setLoading(true);
+        try {
+            let wordBases: WordBase[] = wordBaseStore.wordBases;
+
+            if (!wordBases.length) {
+                wordBases = await WordBaseAPI.getUserWordBases();
+                _dispatch(setWordBases({
+                    id: nanoid(),
+                    wordBases
+                }));
+            }
+
+            if (!wordBases.length) {
+                message.warn(t('当前用户没有词库'));
+                return;
+            }
+            const initValue: WordBase = wordBases[0];
+            _form.setFields([{ name: 'wordBase', value: initValue.id }]);
+            getWords();
+        } catch (err) {
+            message.error(err.message || JSON.stringify(err));
+            message.error(t('获取用户词库失败'));
+        } finally {
+            setLoading(false);
+        }
+    }, []);
 
     const tableColumns = React.useMemo<ColumnsType<WordBaseWord>>(() => [{
         title: t('原文'),
@@ -103,23 +138,7 @@ function WordBase() {
     useWindowResize(handleOnWindowResize, 200);
 
     React.useEffect(() => {
-        setLoading(true);
-
-        WordBaseAPI.getUserWordBases().then(val => {
-            if (Array.isArray(val) && !!val.length) {
-                const initValue: WordBase = val[0];
-                _form.setFields([{ name: 'wordBase', value: initValue.id }]);
-                setWordBases(val);
-                getWords();
-            } else {
-                message.warning(t('当前用户没有词库'));
-                setLoading(false);
-            }
-        }, err => {
-            message.error(err.message || JSON.stringify(err));
-            message.error(t('获取用户词库失败'));
-            setLoading(false);
-        });
+        initData();
     }, []);
 
     const renderHeader = React.useMemo(() => (
@@ -127,14 +146,14 @@ function WordBase() {
             <Form form={_form}>
                 <Form.Item name={'wordBase'} noStyle>
                     <Select>
-                        {wordBases.map(item => (
+                        {wordBaseStore.wordBases.map(item => (
                             <Select.Option value={item.id} key={item.id}>{item.name}</Select.Option>
                         ))}
                     </Select>
                 </Form.Item>
             </Form>
         </header>
-    ), [wordBases]);
+    ), [wordBaseStore.wordBases]);
 
     const renderTable = React.useMemo(() => (
         <Table

@@ -5,7 +5,7 @@ import { useHistory, useLocation } from 'umi';
 import { useWindowResize } from '@/common/utils';
 
 import { Layout, Menu, Typography } from 'antd';
-import { TranslationOutlined, DatabaseOutlined } from '@ant-design/icons';
+import { TranslationOutlined, DatabaseOutlined, ScheduleOutlined } from '@ant-design/icons';
 
 import EuphoriaLogo from '@/common/images/Euphoria.png';
 
@@ -42,6 +42,10 @@ function Sider(this: any) {
         title: t('我的词库'),
         key: 'wordBase',
         icon: <DatabaseOutlined />
+    }, {
+        title: t('背单词'),
+        key: 'recite',
+        icon: <ScheduleOutlined />
     }], []);
 
     const handleOnWindowResize = React.useCallback(() => {

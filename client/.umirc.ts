@@ -11,6 +11,7 @@ export default defineConfig({
       path: '*',
       routes: [
         { path: '/Login', component: '@/containers/Login' },
+        { path: '/recite', component: '@/containers/Recite' },
         { path: '/wordBase', component: '@/containers/WordBase' },
         { path: '/translate', component: '@/containers/Translate' },
         { path: '/', component: '@/containers/Translate', exact: true },

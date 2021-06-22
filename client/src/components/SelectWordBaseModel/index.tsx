@@ -3,8 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { WordBaseAPI } from '@/api';
 import classnames from 'classnames';
 
-import { useSelector } from 'react-redux';
 import { Store } from '@/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { nanoid } from '@reduxjs/toolkit';
+import { setWordBases } from '@/store/WordBaseStore';
 
 import { Modal, Spin, Select, Form, message, Typography } from 'antd';
 
@@ -51,8 +53,9 @@ function SelectWordBaseModel<T extends { id: number; name: string } = WordBase>(
 
     const { t } = useTranslation();
     const [_form] = Form.useForm();
+    const _dispatch = useDispatch();
 
-    const userStore = useSelector<Store, Store['user']>(state => state.user);
+    const wordBaseStore = useSelector<Store, Store['wordBase']>(state => state.wordBase);
 
     const handleOnSelect = React.useCallback((selectID: number, _data?: T[]) => {
         const wb = Array.isArray(_data) ? _data : userWordBase;
@@ -85,10 +88,6 @@ function SelectWordBaseModel<T extends { id: number; name: string } = WordBase>(
     }, [props.onOk, nowSelectData]);
 
     const loadData = React.useCallback(async () => {
-        if (!userStore.user.userID) {
-            message.error(t('用户未登录'));
-            return;
-        }
         if (Array.isArray(props.data)) {
             setUserWordBase(props.data);
             if (!!props.data.length) {
@@ -100,11 +99,20 @@ function SelectWordBaseModel<T extends { id: number; name: string } = WordBase>(
         setLoading(true);
 
         try {
-            const data = await WordBaseAPI.getUserWordBases();
-            setUserWordBase(data);
-            if (!!data.length) {
-                _form.setFields([{ name: 'wordBase', value: data[0].id }]);
-                handleOnSelect(data[0].id, data);
+            let wordBases: any = wordBaseStore.wordBases;
+
+            if (!wordBases.length) {
+                wordBases = await WordBaseAPI.getUserWordBases();
+                _dispatch(setWordBases({
+                    id: nanoid(),
+                    wordBases
+                }));
+            }
+
+            setUserWordBase(wordBases);
+            if (!!wordBases.length) {
+                _form.setFields([{ name: 'wordBase', value: wordBases[0].id }]);
+                handleOnSelect(wordBases[0].id, wordBases);
             }
         } catch (err) {
             message.error(err.message || JSON.stringify(err));
@@ -112,7 +120,7 @@ function SelectWordBaseModel<T extends { id: number; name: string } = WordBase>(
         } finally {
             setLoading(false);
         }
-    }, [userStore.user, props.data]);
+    }, [wordBaseStore.wordBases, props.data]);
 
     React.useEffect(() => {
         if (!props.visible) {
