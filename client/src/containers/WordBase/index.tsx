@@ -6,6 +6,7 @@ import { getPaginationData, safeParse, formatTime, useWindowResize } from '@/com
 import { message, Spin, Select, Form, Table, Button, Dropdown, Menu } from 'antd';
 import { EllipsisOutlined, DeleteFilled, SoundFilled } from '@ant-design/icons';
 
+import { PaginationProps } from 'antd/lib/pagination/Pagination';
 import { ColumnsType } from 'antd/lib/table/interface';
 
 import './index.scss';
@@ -87,6 +88,11 @@ function WordBase() {
         setIsMiniScreen(document.documentElement.clientWidth < 768);
     }, []);
 
+    const handleTablePagination = React.useCallback<Required<PaginationProps>['onChange']>(current => {
+        setCurrentPage(current);
+        getWords(current);
+    }, []);
+
     useWindowResize(handleOnWindowResize, 200);
 
     React.useEffect(() => {
@@ -124,8 +130,15 @@ function WordBase() {
     ), [wordBases]);
 
     const renderTable = React.useMemo(() => (
-        <Table dataSource={words} columns={tableColumns} scroll={isMiniScreen ? { x: 450 } :undefined} bordered />
-    ), [words, isMiniScreen, tableColumns]);
+        <Table
+            className={'word-base-table'}
+            dataSource={words}
+            columns={tableColumns}
+            scroll={isMiniScreen ? { x: 450 } : undefined}
+            pagination={{ total, current: currentPage, onChange: handleTablePagination }}
+            bordered
+        />
+    ), [words, isMiniScreen, tableColumns, total, currentPage]);
 
     return (
         <div className={'container word-base'}>
