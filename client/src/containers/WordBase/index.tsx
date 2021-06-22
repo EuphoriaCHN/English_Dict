@@ -14,6 +14,7 @@ function WordBase() {
     const [words, setWords] = React.useState<WordBaseWord[]>([]);
     const [wordBases, setWordBases] = React.useState<WordBase[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
+    const [isMiniScreen, setIsMiniScreen] = React.useState<boolean>(false);
 
     const [total, setTotal] = React.useState<number>(0);
     const [currentPage, setCurrentPage] = React.useState<number>(1);
@@ -38,15 +39,12 @@ function WordBase() {
         }
     }, [currentPage]);
 
-    useWindowResize(function (ev) {
-        console.log(document.documentElement.clientWidth);
-
-    }, 200);
-
     const tableColumns = React.useMemo<ColumnsType<WordBaseWord>>(() => [{
         title: t('原文'),
         dataIndex: 'content',
         key: 'content',
+        width: isMiniScreen ? 84 : undefined,
+        fixed: isMiniScreen ? 'left' : undefined
     }, {
         title: t('译文'),
         render(_, item) {
@@ -57,14 +55,16 @@ function WordBase() {
         render(_, item) {
             item.passCount
             return formatTime(item.createTime);
-        }
+        },
+        width: isMiniScreen ? 102 : undefined
     }, {
         title: t('测试 / 通过比'),
         render(_, item) {
             return `${item.examCount}/${item.passCount}`;
-        }
+        },
+        width: isMiniScreen ? 120 : undefined
     }, {
-        title: t('更多操作'),
+        title: '',
         render(_, item) {
             return (
                 <Dropdown
@@ -78,8 +78,16 @@ function WordBase() {
                     <Button type={'text'} icon={<EllipsisOutlined />} />
                 </Dropdown>
             );
-        }
-    }], []);
+        },
+        width: 64,
+        fixed: isMiniScreen ? 'right' : undefined
+    }], [isMiniScreen]);
+
+    const handleOnWindowResize = React.useCallback(() => {
+        setIsMiniScreen(document.documentElement.clientWidth < 768);
+    }, []);
+
+    useWindowResize(handleOnWindowResize, 200);
 
     React.useEffect(() => {
         setLoading(true);
@@ -116,8 +124,8 @@ function WordBase() {
     ), [wordBases]);
 
     const renderTable = React.useMemo(() => (
-        <Table dataSource={words} columns={tableColumns} />
-    ), [words]);
+        <Table dataSource={words} columns={tableColumns} scroll={isMiniScreen ? { x: 450 } :undefined} bordered />
+    ), [words, isMiniScreen, tableColumns]);
 
     return (
         <div className={'container word-base'}>

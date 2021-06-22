@@ -7,7 +7,7 @@ import noop from 'lodash-es/noop';
 /**
  * window resize hook
  */
-export function useWindowResize(callback: (ev: UIEvent) => void, debounceTime?: number) {
+export function useWindowResize(callback: (ev: UIEvent) => void, debounceTime?: number, immediately?: boolean) {
     const ref = React.useRef(!!debounceTime ? debounce(callback, debounceTime) : callback);
 
     React.useEffect(() => {
@@ -27,11 +27,13 @@ export function handleSoundVoiceOnMouseEnter(soundURL: string, el: HTMLAudioElem
         return noop;
     }
 
-    return debounce<React.MouseEventHandler<any>>(async function () {
+    const cb = React.useCallback(debounce<React.MouseEventHandler<any>>(async function () {
         el.src = soundURL;
         el.loop = false;
         el.play();
-    }, 500);
+    }, 500), [el, soundURL]);
+
+    return cb;
 }
 
 /**
