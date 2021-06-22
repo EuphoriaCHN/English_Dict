@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
+import WordBaseSelector from '@/components/WordBaseSelector';
 import {} from 'antd';
 
 import './index.scss';
@@ -10,9 +11,14 @@ function Recite() {
 
     return (
         <div className={'container recite'}>
-            <h1>Recite</h1>
+            <header className={'recite-header'}>
+                <WordBaseSelector />
+            </header>
+            <div className={'recite-modes'}>
+
+            </div>
         </div>
     );
 }
 
-export default Recite
+export default Recite;

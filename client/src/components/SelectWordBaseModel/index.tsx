@@ -1,23 +1,18 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { WordBaseAPI } from '@/api';
 import classnames from 'classnames';
 
-import { Store } from '@/store';
-import { useDispatch, useSelector } from 'react-redux';
-import { nanoid } from '@reduxjs/toolkit';
-import { setWordBases } from '@/store/WordBaseStore';
-
-import { Modal, Spin, Select, Form, message, Typography } from 'antd';
+import WordBaseSelector from '@/components/WordBaseSelector';
+import { Modal, Spin, message, Typography } from 'antd';
 
 import { ButtonProps } from 'antd/lib/button/button';
 
 import './index.scss';
 
-export interface ISelectWordBaseModelProps<T extends { id: number; name: string }> {
+export interface ISelectWordBaseModelProps {
     visible: boolean;
     onCancel: () => void;
-    onOk: (wordBaseID: number, nowSelectData: T | null) => Promise<unknown>;
+    onOk: (wordBaseID: number, nowSelectData: WordBase | null) => Promise<unknown>;
 
     /**
      * @default "请选择词库"
@@ -36,99 +31,37 @@ export interface ISelectWordBaseModelProps<T extends { id: number; name: string 
     /**
      * 自定义数据
      */
-    data?: T[];
+    data?: WordBase[];
 
     /**
      * 接管 Content 渲染
      */
-    renderContent?: (defaultElement: JSX.Element, nowSelectData: T | null) => JSX.Element;
+    renderContent?: (defaultElement: JSX.Element, nowSelectData: WordBase | null) => JSX.Element;
 
     className?: string;
 }
 
-function SelectWordBaseModel<T extends { id: number; name: string } = WordBase>(props: ISelectWordBaseModelProps<T>) {
+function SelectWordBaseModel(props: ISelectWordBaseModelProps) {
     const [loading, setLoading] = React.useState<boolean>(false);
-    const [userWordBase, setUserWordBase] = React.useState<T[]>([]);
-    const [nowSelectData, setNowSelectData] = React.useState<T | null>(null);
+    const [selectWordBase, setSelectWordBase] = React.useState<WordBase | null>(null);
 
     const { t } = useTranslation();
-    const [_form] = Form.useForm();
-    const _dispatch = useDispatch();
-
-    const wordBaseStore = useSelector<Store, Store['wordBase']>(state => state.wordBase);
-
-    const handleOnSelect = React.useCallback((selectID: number, _data?: T[]) => {
-        const wb = Array.isArray(_data) ? _data : userWordBase;
-
-        for (const wordBase of wb) {
-            if (wordBase.id === selectID) {
-                return setNowSelectData(wordBase);
-            }
-        }
-        setNowSelectData(null);
-    }, [userWordBase]);
 
     const handleOnOK = React.useCallback(async () => {
-        const { wordBase } = _form.getFieldsValue(['wordBase']);
-
-        if (!wordBase) {
-            message.error(t('未选择词库'));
+        if (!selectWordBase) {
+            message.warn(t('未选择词库'));
             return;
         }
-
         try {
             setLoading(true);
-            await props.onOk(wordBase, nowSelectData);
+            await props.onOk(selectWordBase.id, selectWordBase);
             setTimeout(props.onCancel);
         } catch (err) {
             message.error(err.message || JSON.stringify(err));
         } finally {
             setLoading(false);
         }
-    }, [props.onOk, nowSelectData]);
-
-    const loadData = React.useCallback(async () => {
-        if (Array.isArray(props.data)) {
-            setUserWordBase(props.data);
-            if (!!props.data.length) {
-                _form.setFields([{ name: 'wordBase', value: props.data[0].id }]);
-                handleOnSelect(props.data[0].id, props.data);
-            }
-            return;
-        }
-        setLoading(true);
-
-        try {
-            let wordBases: any = wordBaseStore.wordBases;
-
-            if (!wordBases.length) {
-                wordBases = await WordBaseAPI.getUserWordBases();
-                _dispatch(setWordBases({
-                    id: nanoid(),
-                    wordBases
-                }));
-            }
-
-            setUserWordBase(wordBases);
-            if (!!wordBases.length) {
-                _form.setFields([{ name: 'wordBase', value: wordBases[0].id }]);
-                handleOnSelect(wordBases[0].id, wordBases);
-            }
-        } catch (err) {
-            message.error(err.message || JSON.stringify(err));
-            message.error(t('获取用户词库错误'));
-        } finally {
-            setLoading(false);
-        }
-    }, [wordBaseStore.wordBases, props.data]);
-
-    React.useEffect(() => {
-        if (!props.visible) {
-            setUserWordBase([]);
-            return;
-        }
-        loadData();
-    }, [props.visible, loadData]);
+    }, [props.onOk, selectWordBase]);
 
     const renderContent = React.useMemo(() => {
         const defaultContent = (
@@ -139,24 +72,16 @@ function SelectWordBaseModel<T extends { id: number; name: string } = WordBase>(
                 >
                     {props.label || t('请选择词库')}
                 </Typography.Title>
-                <Form name={'selectWordBase'} form={_form}>
-                    <Form.Item name={'wordBase'} noStyle>
-                        <Select className={'select-word-base-model-select'} placeholder={t('请选择词库')} onSelect={(id: number) => handleOnSelect(id, userWordBase)}>
-                            {userWordBase.map(item => (
-                                <Select.Option value={item.id} key={item.id}>{item.name}</Select.Option>
-                            ))}
-                        </Select>
-                    </Form.Item>
-                </Form>
+                <WordBaseSelector data={props.data} onSelect={(_, wb) => setSelectWordBase(wb)} />
             </React.Fragment>
         );
 
         if (typeof props.renderContent === 'function') {
-            return props.renderContent(defaultContent, nowSelectData);
+            return props.renderContent(defaultContent, selectWordBase);
         }
 
         return defaultContent;
-    }, [props.renderContent, userWordBase, nowSelectData]);
+    }, [props.renderContent, selectWordBase]);
 
     return (
         <Modal

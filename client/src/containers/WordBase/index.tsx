@@ -1,14 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { WordBaseAPI, WordBaseWordsAPI } from '@/api';
+import { WordBaseWordsAPI } from '@/api';
 import { getPaginationData, safeParse, formatTime, useWindowResize } from '@/common/utils';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { nanoid } from '@reduxjs/toolkit';
-import { Store } from '@/store';
-import { setWordBases } from '@/store/WordBaseStore';
-
-import { message, Spin, Select, Form, Table, Button, Dropdown, Menu } from 'antd';
+import WordBaseSelector from '@/components/WordBaseSelector';
+import { message, Spin, Table, Button, Dropdown, Menu } from 'antd';
 import { EllipsisOutlined, DeleteFilled, SoundFilled } from '@ant-design/icons';
 
 import { PaginationProps } from 'antd/lib/pagination/Pagination';
@@ -20,23 +16,19 @@ function WordBase() {
     const [words, setWords] = React.useState<WordBaseWord[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
     const [isMiniScreen, setIsMiniScreen] = React.useState<boolean>(false);
+    const [selectedWordBaseID, setSelectedWordBaseID] = React.useState<number>(0);
 
     const [total, setTotal] = React.useState<number>(0);
     const [currentPage, setCurrentPage] = React.useState<number>(1);
 
     const { t } = useTranslation();
-    const [_form] = Form.useForm();
-    const _dispatch = useDispatch();
-
-    const wordBaseStore = useSelector<Store, Store['wordBase']>(state => state.wordBase);
 
     const getWords = React.useCallback(async (_currentPage?: number, _pageSize: number = 10) => {
-        const { wordBase: wordBaseID } = _form.getFieldsValue(['wordBase']);
         const { limit, offset } = getPaginationData(_currentPage || currentPage, _pageSize);
 
         setLoading(true);
         try {
-            const { count, rows } = await WordBaseWordsAPI.getWordBaseWords({ wordBaseID, limit, offset });
+            const { count, rows } = await WordBaseWordsAPI.getWordBaseWords({ wordBaseID: selectedWordBaseID, limit, offset });
             setTotal(count);
             setWords(rows);
         } catch (err) {
@@ -45,35 +37,7 @@ function WordBase() {
         } finally {
             setLoading(false);
         }
-    }, [currentPage]);
-
-    const initData = React.useCallback(async () => {
-        setLoading(true);
-        try {
-            let wordBases: WordBase[] = wordBaseStore.wordBases;
-
-            if (!wordBases.length) {
-                wordBases = await WordBaseAPI.getUserWordBases();
-                _dispatch(setWordBases({
-                    id: nanoid(),
-                    wordBases
-                }));
-            }
-
-            if (!wordBases.length) {
-                message.warn(t('当前用户没有词库'));
-                return;
-            }
-            const initValue: WordBase = wordBases[0];
-            _form.setFields([{ name: 'wordBase', value: initValue.id }]);
-            getWords();
-        } catch (err) {
-            message.error(err.message || JSON.stringify(err));
-            message.error(t('获取用户词库失败'));
-        } finally {
-            setLoading(false);
-        }
-    }, []);
+    }, [currentPage, selectedWordBaseID]);
 
     const tableColumns = React.useMemo<ColumnsType<WordBaseWord>>(() => [{
         title: t('原文'),
@@ -138,22 +102,18 @@ function WordBase() {
     useWindowResize(handleOnWindowResize, 200);
 
     React.useEffect(() => {
-        initData();
-    }, []);
+        // 要等到 renderHeader 中 word base selector 进行初始化的 onSelect 后再去拉取 words
+        if (!selectedWordBaseID) {
+            return;
+        }
+        setTimeout(getWords);
+    }, [selectedWordBaseID]);
 
     const renderHeader = React.useMemo(() => (
         <header className={'word-base-header'}>
-            <Form form={_form}>
-                <Form.Item name={'wordBase'} noStyle>
-                    <Select>
-                        {wordBaseStore.wordBases.map(item => (
-                            <Select.Option value={item.id} key={item.id}>{item.name}</Select.Option>
-                        ))}
-                    </Select>
-                </Form.Item>
-            </Form>
+            <WordBaseSelector onSelect={id => setSelectedWordBaseID(id)} />
         </header>
-    ), [wordBaseStore.wordBases]);
+    ), []);
 
     const renderTable = React.useMemo(() => (
         <Table
