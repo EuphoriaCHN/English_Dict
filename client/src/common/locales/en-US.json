@@ -44,5 +44,12 @@
   "正确次数": "Correct times",
   "将单词 \"{_nowInputText}\" 添加到哪个词库": "Add the word &quot;{_nowInputText}&quot; to which dictionary",
   "请选择从哪个词库中移除": "Please select the dictionary from which to remove",
-  "删除": "delete"
+  "删除": "delete",
+  "获取词库词语失败": "Failed to get thesaurus words",
+  "原文": "original",
+  "译文": "Translation",
+  "测试 / 通过比": "Test/pass ratio",
+  "为了获得更好的体验，请横屏使用": "In order to get a better experience, please use horizontal screen",
+  "当前用户没有词库": "The current user has no thesaurus",
+  "获取用户词库失败": "Failed to obtain user dictionary"
 }
