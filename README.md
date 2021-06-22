@@ -63,6 +63,18 @@ Finally, run `i18n` scripts again to generate i18n static locale:
 yarn i18n
 ```
 
+#### About MomentJS
+
+Frontend project used [MomentJS Webpack Plugin](https://www.npmjs.com/package/moment-locales-webpack-plugin) for optimizing. More details see `/client/.umirc.ts` **chainWebpack** configurations:
+
+```typescript
+chainWebpack(chain) {
+  chain.plugin('moment-js-webpack-plugin').use(new MomentLocalesPlugin({
+      localesToKeep: ['en', 'zh-cn']
+  }));
+}
+```
+
 ## Deployment
 
 > Stay tuned...
