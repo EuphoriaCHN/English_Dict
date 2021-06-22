@@ -27,11 +27,11 @@ export function handleSoundVoiceOnMouseEnter(soundURL: string, el: HTMLAudioElem
         return noop;
     }
 
-    const cb = React.useCallback(debounce<React.MouseEventHandler<any>>(async function () {
+    const cb = debounce<React.MouseEventHandler<any>>(async function () {
         el.src = soundURL;
         el.loop = false;
         el.play();
-    }, 500), [el, soundURL]);
+    }, 500);
 
     return cb;
 }
