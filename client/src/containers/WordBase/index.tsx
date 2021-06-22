@@ -85,7 +85,14 @@ function WordBase() {
     }], [isMiniScreen]);
 
     const handleOnWindowResize = React.useCallback(() => {
-        setIsMiniScreen(document.documentElement.clientWidth < 768);
+        const clientWidth = document.documentElement.clientWidth;
+        const isMiniScreen = clientWidth < 768;
+
+        setIsMiniScreen(isMiniScreen);
+
+        if (clientWidth < 414) {
+            message.warn(t('为了获得更好的体验，请横屏使用'));
+        }
     }, []);
 
     const handleTablePagination = React.useCallback<Required<PaginationProps>['onChange']>(current => {

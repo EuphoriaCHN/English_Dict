@@ -16,7 +16,7 @@ export function useWindowResize(callback: (ev: UIEvent) => void, debounceTime?: 
         return () => {
             window.removeEventListener('resize', ref.current);
         };
-    }, []);
+    }, [ref.current]);
 }
 
 /**
